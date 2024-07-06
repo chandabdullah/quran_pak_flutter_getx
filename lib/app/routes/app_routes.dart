@@ -6,6 +6,7 @@ abstract class Routes {
   static const HOME = _Paths.HOME;
   static const SETTINGS = _Paths.SETTINGS;
   static const READ_QURAN = _Paths.READ_QURAN;
+  static const QIBLA_DIRECTION = _Paths.QIBLA_DIRECTION;
 }
 
 abstract class _Paths {
@@ -13,4 +14,5 @@ abstract class _Paths {
   static const HOME = '/home';
   static const SETTINGS = '/settings';
   static const READ_QURAN = '/read-quran';
+  static const QIBLA_DIRECTION = '/qibla-direction';
 }

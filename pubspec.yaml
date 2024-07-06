@@ -17,6 +17,9 @@ dependencies:
   get_storage: ^2.1.1
   google_fonts: ^6.2.1
   flutter_islamic_icons: ^1.0.2
+  geolocator: ^9.0.1
+  flutter_svg: ^2.0.10+1
+  # flutter_qiblah_update: ^2.0.3
 
 dev_dependencies: 
   flutter_lints: 4.0.0
@@ -26,3 +29,6 @@ dev_dependencies:
 flutter: 
   uses-material-design: true
 
+  assets:
+    - assets/
+    - assets/svg/
