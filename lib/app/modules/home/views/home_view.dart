@@ -50,9 +50,7 @@ class HomeView extends GetView<HomeController> {
           decoration: BoxDecoration(
             color: Get.theme.primaryColor,
             image: DecorationImage(
-              image: const NetworkImage(
-                "https://www.pngall.com/wp-content/uploads/4/Mosque-PNG-Pic.png",
-              ),
+              image: const AssetImage("assets/images/mosque.png"),
               filterQuality: FilterQuality.low,
               fit: BoxFit.cover,
               repeat: ImageRepeat.noRepeat,
@@ -60,7 +58,7 @@ class HomeView extends GetView<HomeController> {
                 Get.theme.primaryColor,
                 BlendMode.colorBurn,
               ),
-              opacity: .5,
+              opacity: .3,
             ),
           ),
           padding: EdgeInsets.only(
@@ -185,7 +183,7 @@ class HomeView extends GetView<HomeController> {
                       },
                     ),
                     featureCard(
-                      icon: FlutterIslamicIcons.solidTasbih2,
+                      icon: FlutterIslamicIcons.solidTasbihHand,
                       text: "Tasbih",
                     ),
                     featureCard(
@@ -206,7 +204,7 @@ class HomeView extends GetView<HomeController> {
                 const Gap(10),
                 Container(
                   decoration: BoxDecoration(
-                    color: Get.theme.appBarTheme.iconTheme?.color,
+                    color: Get.theme.cardColor,
                     borderRadius: BorderRadius.circular(kBorderRadius),
                     border: Border.all(
                       color: Get.theme.dividerColor,
