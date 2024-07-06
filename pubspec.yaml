@@ -1,0 +1,28 @@
+name: quran_pak
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=3.3.4 <4.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.6
+  get: 4.6.6
+  flutter: 
+    sdk: flutter
+  turn_page_transition: ^0.3.0
+  draggable_home: ^1.0.5
+  gap: ^3.0.1
+  flutter_screenutil: ^5.9.3
+  get_storage: ^2.1.1
+  google_fonts: ^6.2.1
+  flutter_islamic_icons: ^1.0.2
+
+dev_dependencies: 
+  flutter_lints: 4.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  uses-material-design: true
+
