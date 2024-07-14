@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 class MyTheme {
   static ThemeData getThemeData({required bool isLight}) {
     return ThemeData(
+      // fontFamily: GoogleFonts.amiriQuran().fontFamily,
       fontFamily: GoogleFonts.dosis().fontFamily,
 
       useMaterial3: true,
@@ -81,6 +82,9 @@ class MyTheme {
 
       // text theme
       textTheme: MyStyles.getTextTheme(isLightTheme: isLight),
+      // textTheme: GoogleFonts.amiriQuranTextTheme(
+      //   isLight ? Typography.blackRedmond : Typography.whiteRedmond,
+      // ),
 
       // chip theme
       chipTheme: MyStyles.getChipTheme(isLightTheme: isLight),

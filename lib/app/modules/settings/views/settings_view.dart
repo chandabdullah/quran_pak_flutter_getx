@@ -48,7 +48,8 @@ class SettingsView extends GetView<SettingsController> {
                           icon: FlutterIslamicIcons.solidCommunity,
                           title: "Islamic Madhhab",
                           subtitle: "Shafi, Hanbali, Maliki (Standard)",
-                          iconColor: Colors.deepPurple,
+                          // iconColor: Colors.deepPurple,
+                          iconColor: Get.theme.primaryColor,
                           onTap: () {},
                         ),
                         const Divider(height: 1),
@@ -56,7 +57,8 @@ class SettingsView extends GetView<SettingsController> {
                           icon: Icons.calculate,
                           title: "Calculation Method",
                           subtitle: "Karachi University, Pakistan",
-                          iconColor: Colors.teal,
+                          // iconColor: Colors.teal,
+                          iconColor: Get.theme.primaryColor,
                           onTap: () {},
                         ),
                         const Divider(height: 1),
@@ -65,7 +67,8 @@ class SettingsView extends GetView<SettingsController> {
                           title: "Prayer Time Adjustment",
                           subtitle:
                               "The adjustment will be effective for daily prayer times",
-                          iconColor: Colors.green,
+                          // iconColor: Colors.green,
+                          iconColor: Get.theme.primaryColor,
                           onTap: () {},
                         ),
                         const Divider(height: 1),
@@ -73,7 +76,8 @@ class SettingsView extends GetView<SettingsController> {
                           icon: FlutterIslamicIcons.calendar,
                           title: "Hijri Adjustment",
                           subtitle: "Auto",
-                          iconColor: Colors.amber,
+                          // iconColor: Colors.amber,
+                          iconColor: Get.theme.primaryColor,
                           onTap: () {},
                           borderRadius: const BorderRadius.only(
                             bottomRight: Radius.circular(kBorderRadius),
@@ -108,7 +112,8 @@ class SettingsView extends GetView<SettingsController> {
                           subtitle:
                               MySharedPref.getThemeIsLight() ? "Light" : "Dark",
                           value: !MySharedPref.getThemeIsLight(),
-                          iconColor: Colors.indigo,
+                          // iconColor: Colors.indigo,
+                          iconColor: Get.theme.primaryColor,
                           onChange: (value) {
                             MyTheme.changeTheme();
                             controller.update();
@@ -127,7 +132,8 @@ class SettingsView extends GetView<SettingsController> {
                           title: "Time Format",
                           subtitle: "24 Format",
                           value: false,
-                          iconColor: Colors.orange,
+                          // iconColor: Colors.orange,
+                          iconColor: Get.theme.primaryColor,
                           onChange: (value) {},
                           borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(kBorderRadius),
@@ -139,7 +145,8 @@ class SettingsView extends GetView<SettingsController> {
                           icon: Icons.color_lens,
                           title: "App Color",
                           subtitle: "Default",
-                          iconColor: Colors.teal,
+                          // iconColor: Colors.teal,
+                          iconColor: Get.theme.primaryColor,
                           onTap: () {},
                           borderRadius: const BorderRadius.only(
                             bottomRight: Radius.circular(kBorderRadius),

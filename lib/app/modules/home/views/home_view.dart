@@ -187,13 +187,14 @@ class HomeView extends GetView<HomeController> {
                       text: "Tasbih",
                     ),
                     featureCard(
-                      icon: FlutterIslamicIcons.solidPrayingPerson,
-                      text: "PrayerTime",
+                      icon: FlutterIslamicIcons.solidKowtow,
+                      // icon: FlutterIslamicIcons.solidPrayingPerson,
+                      text: "Prayer Time",
                     ),
-                    featureCard(
-                      icon: FlutterIslamicIcons.solidZakat,
-                      text: "Zakat",
-                    ),
+                    // featureCard(
+                    //   icon: FlutterIslamicIcons.solidZakat,
+                    //   text: "Zakat",
+                    // ),
                   ],
                 ),
                 const Gap(20),

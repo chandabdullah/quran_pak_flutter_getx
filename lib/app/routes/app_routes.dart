@@ -7,6 +7,7 @@ abstract class Routes {
   static const SETTINGS = _Paths.SETTINGS;
   static const READ_QURAN = _Paths.READ_QURAN;
   static const QIBLA_DIRECTION = _Paths.QIBLA_DIRECTION;
+  static const LOCATION_PERMISSION = _Paths.LOCATION_PERMISSION;
 }
 
 abstract class _Paths {
@@ -15,4 +16,5 @@ abstract class _Paths {
   static const SETTINGS = '/settings';
   static const READ_QURAN = '/read-quran';
   static const QIBLA_DIRECTION = '/qibla-direction';
+  static const LOCATION_PERMISSION = '/location-permission';
 }
