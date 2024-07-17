@@ -1,4 +1,6 @@
+import 'package:quran_pak/app/constants/app_constants.dart';
 import 'package:quran_pak/app/services/permissions_service.dart';
+import 'package:quran_pak/config/translations/localization_service.dart';
 
 import '/app/data/local/my_shared_pref.dart';
 import '/config/theme/my_theme.dart';
@@ -21,27 +23,30 @@ void main() async {
 
   runApp(
     ScreenUtilInit(
+      // todo add your (Xd / Figma) artboard size
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
       useInheritedMediaQuery: true,
       rebuildFactor: (old, data) => true,
-      builder: (context, child) {
+      builder: (context, widget) {
         return GetMaterialApp(
+          title: appName,
+          useInheritedMediaQuery: true,
           debugShowCheckedModeBanner: false,
-          title: "Weather App",
-          initialRoute: PermissionHandlerService.initialPage(appPermissions),
-          getPages: AppPages.routes,
           builder: (context, widget) {
-            bool themeIsLight = MySharedPref.getThemeIsLight();
             return Theme(
-              data: MyTheme.getThemeData(isLight: themeIsLight),
+              data: MyTheme.getThemeData(),
               child: MediaQuery(
                 data: MediaQuery.of(context),
                 child: widget!,
               ),
             );
           },
+          initialRoute: PermissionHandlerService.initialPage(appPermissions),
+          getPages: AppPages.routes,
+          // locale: MyLocale.getCurrentLocal(),
+          translations: LocalizationService(),
         );
       },
     ),

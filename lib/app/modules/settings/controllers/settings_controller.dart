@@ -1,9 +1,13 @@
 import 'package:get/get.dart';
+import 'package:quran_pak/app/data/colors_list.dart';
+import 'package:quran_pak/app/models/app_color_model.dart';
+import 'package:quran_pak/config/theme/my_theme.dart';
 
 class SettingsController extends GetxController {
-  //TODO: Implement SettingsController
+  AppColorModel get colorsList => MyTheme.getThemeIsLight
+      ? appColorModelFromJson(lightColors)
+      : appColorModelFromJson(darkColors);
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -18,6 +22,4 @@ class SettingsController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

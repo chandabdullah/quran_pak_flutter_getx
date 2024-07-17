@@ -8,7 +8,9 @@ import '/config/theme/my_styles.dart';
 import 'package:flutter/material.dart';
 
 class MyTheme {
-  static ThemeData getThemeData({required bool isLight}) {
+  static ThemeData getThemeData() {
+    bool isLight = MyDarkMode.getThemeIsLight();
+
     return ThemeData(
       // fontFamily: GoogleFonts.amiriQuran().fontFamily,
       fontFamily: GoogleFonts.dosis().fontFamily,
@@ -16,17 +18,17 @@ class MyTheme {
       useMaterial3: true,
       // main color (app bar,tabs..etc)
       primaryColor: isLight
-          ? LightThemeColors.primaryColor
-          : DarkThemeColors.primaryColor,
+          ? LightThemeColors.primaryColor.call()
+          : DarkThemeColors.primaryColor.call(),
 
       colorScheme: isLight
           ? ColorScheme.light(
-              primary: LightThemeColors.primaryColor,
+              primary: LightThemeColors.primaryColor.call(),
               secondary: LightThemeColors.secondaryColor,
               tertiary: LightThemeColors.tertiaryColor,
             )
           : ColorScheme.dark(
-              primary: DarkThemeColors.primaryColor,
+              primary: DarkThemeColors.primaryColor.call(),
               secondary: DarkThemeColors.secondaryColor,
               tertiary: DarkThemeColors.tertiaryColor,
             ),
@@ -61,8 +63,8 @@ class MyTheme {
       // progress bar theme
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: isLight
-            ? LightThemeColors.primaryColor
-            : DarkThemeColors.primaryColor,
+            ? LightThemeColors.primaryColor.call()
+            : DarkThemeColors.primaryColor.call(),
       ),
 
       bottomSheetTheme: const BottomSheetThemeData(
@@ -103,13 +105,13 @@ class MyTheme {
   /// (so when the app is killed and up again theme will remain the same)
   static changeTheme() {
     // *) check if the current theme is light (default is light)
-    bool isLightTheme = MySharedPref.getThemeIsLight();
+    bool isLightTheme = MyDarkMode.getThemeIsLight();
     // *) store the new theme mode on get storage
-    MySharedPref.setThemeIsLight(!isLightTheme);
+    MyDarkMode.setThemeIsLight(!isLightTheme ? AppTheme.Light : AppTheme.Dark);
     // *) let GetX change theme
     Get.changeThemeMode(!isLightTheme ? ThemeMode.light : ThemeMode.dark);
   }
 
   /// check if the theme is light or dark
-  static bool get getThemeIsLight => MySharedPref.getThemeIsLight();
+  static bool get getThemeIsLight => MyDarkMode.getThemeIsLight();
 }

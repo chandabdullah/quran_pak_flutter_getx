@@ -7,8 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class MyFonts {
   // return the right font depending on app language
   static TextStyle get getAppFontType =>
-      LocalizationService.supportedLanguagesFontsFamilies[
-          MySharedPref.getCurrentLocal().languageCode]!;
+      LocalizationService.supportedLanguagesFontsFamilies['en']!;
+  // LocalizationService.supportedLanguagesFontsFamilies[
+  //     MySharedPref.getCurrentLocal().languageCode]!;
 
   // headlines text font
   static TextStyle get headlineTextStyle => getAppFontType;

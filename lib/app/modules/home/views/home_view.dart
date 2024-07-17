@@ -1,13 +1,18 @@
+import 'package:adhan/adhan.dart';
 import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 
 import 'package:get/get.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
 import 'package:quran_pak/app/routes/app_pages.dart';
+import 'package:quran_pak/app/services/payer_name_and_icon.dart';
+import 'package:quran_pak/utils/date_time_utils.dart';
+import 'package:uicons/uicons.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -66,88 +71,107 @@ class HomeView extends GetView<HomeController> {
             left: kLeftPadding(context) + kPadding,
             right: kRightPadding(context) + kPadding,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+          child: (controller.prayerTimes == null)
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: Get.theme.cardColor,
+                  ),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
                       children: [
-                        Text(
-                          "9 Ramadhan 1445 H",
-                          style: Get.textTheme.bodyLarge?.copyWith(
-                            color: Get.theme.appBarTheme.iconTheme?.color,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "9 Ramadhan 1445 H",
+                                style: Get.textTheme.bodyLarge?.copyWith(
+                                  color: Get.theme.appBarTheme.iconTheme?.color,
+                                ),
+                              ),
+                              Text(
+                                "Faisalabad, Pakistan",
+                                style: Get.textTheme.bodySmall?.copyWith(
+                                  color: Get.theme.appBarTheme.iconTheme?.color,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Text(
-                          "Faisalabad, Pakistan",
-                          style: Get.textTheme.bodySmall?.copyWith(
+                        IconButton(
+                          onPressed: () {
+                            Get.toNamed(Routes.SETTINGS);
+                          },
+                          icon: Icon(
+                            Icons.settings,
                             color: Get.theme.appBarTheme.iconTheme?.color,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Get.toNamed(Routes.SETTINGS);
-                    },
-                    icon: Icon(
-                      Icons.settings,
-                      color: Get.theme.appBarTheme.iconTheme?.color,
+                    const Gap(8),
+                    Text(
+                      "Next Prayer",
+                      textAlign: TextAlign.center,
+                      style: Get.textTheme.bodyMedium?.copyWith(
+                        color: Get.theme.appBarTheme.iconTheme?.color,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const Gap(20),
-              Text(
-                "04:41",
-                style: Get.textTheme.displayLarge?.copyWith(
-                  color: Get.theme.appBarTheme.iconTheme?.color,
+                    Text(
+                      controller.nextPrayerTime().toLocalDateFormat(),
+                      textAlign: TextAlign.center,
+                      style: Get.textTheme.displayLarge?.copyWith(
+                        color: Get.theme.appBarTheme.iconTheme?.color,
+                      ),
+                    ),
+                    Text(
+                      "${controller.prayerTimes?.nextPrayer().name.capitalize}"
+                      " "
+                      "${timeLeft(DateTime.now(), controller.nextPrayerTime() ?? DateTime.now())}",
+                      textAlign: TextAlign.center,
+                      style: Get.textTheme.bodyMedium?.copyWith(
+                        color: Get.theme.appBarTheme.iconTheme?.color,
+                      ),
+                    ),
+                    const Gap(20),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          prayerTimeCard(
+                            // icon: UIcons.regularStraight.moon_stars,
+                            prayerName: Prayer.fajr,
+                            prayerTime: controller.prayerTimes!.fajr,
+                          ),
+                          prayerTimeCard(
+                            // icon: UIcons.regularStraight.sun,
+                            prayerName: Prayer.dhuhr,
+                            prayerTime: controller.prayerTimes!.dhuhr,
+                          ),
+                          prayerTimeCard(
+                            // icon: Icons.dark_mode,
+                            prayerName: Prayer.asr,
+                            prayerTime: controller.prayerTimes!.asr,
+                          ),
+                          prayerTimeCard(
+                            // icon: Icons.dark_mode,
+                            prayerName: Prayer.maghrib,
+                            prayerTime: controller.prayerTimes!.maghrib,
+                          ),
+                          prayerTimeCard(
+                            // icon: Icons.dark_mode,
+                            prayerName: Prayer.isha,
+                            prayerTime: controller.prayerTimes!.isha,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-              ),
-              Text(
-                "Fajr 3 hours 9 min left",
-                style: Get.textTheme.bodyMedium?.copyWith(
-                  color: Get.theme.appBarTheme.iconTheme?.color,
-                ),
-              ),
-              const Gap(20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  prayerTimeCard(
-                    icon: Icons.dark_mode,
-                    prayerName: "Fajr",
-                    prayerTime: "4:41 AM",
-                  ),
-                  prayerTimeCard(
-                    icon: Icons.dark_mode,
-                    prayerName: "Duhar",
-                    prayerTime: "12:35 PM",
-                  ),
-                  prayerTimeCard(
-                    icon: Icons.dark_mode,
-                    prayerName: "Asr",
-                    prayerTime: "3:40 PM",
-                  ),
-                  prayerTimeCard(
-                    icon: Icons.dark_mode,
-                    prayerName: "Maghrib",
-                    prayerTime: "7:16 PM",
-                  ),
-                  prayerTimeCard(
-                    icon: Icons.dark_mode,
-                    prayerName: "Isha",
-                    prayerTime: "7:35 PM",
-                  ),
-                ],
-              )
-            ],
-          ),
         ),
         body: [
           Padding(
@@ -271,27 +295,33 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget prayerTimeCard({
-    required IconData icon,
-    required String prayerName,
-    required String prayerTime,
+    // required IconData icon,
+    required Prayer prayerName,
+    required DateTime prayerTime,
   }) {
     return SizedBox(
       child: Column(
         children: [
           Text(
-            prayerName,
+            prayerName.name == 'none'
+                ? "Midnight"
+                : prayerName.name.capitalize ?? "",
             style: Get.textTheme.bodyMedium?.copyWith(
               color: Get.theme.appBarTheme.iconTheme?.color,
             ),
           ),
-          const Gap(4),
+          const Gap(8),
           Icon(
-            icon,
+            // icon,
+            returnIconAccordingToPrayer(
+              controller.prayerTimes?.currentPrayer().name,
+              prayerName: prayerName.name,
+            ),
             color: Get.theme.appBarTheme.iconTheme?.color,
           ),
-          const Gap(4),
+          const Gap(12),
           Text(
-            prayerTime,
+            prayerTime.toLocalDateFormat(),
             style: Get.textTheme.bodyMedium?.copyWith(
               color: Get.theme.appBarTheme.iconTheme?.color,
             ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+const String appName = 'Mumin';
+
 Duration apiCallAfter = const Duration(hours: 1);
 
 const double kPadding = 16.0;

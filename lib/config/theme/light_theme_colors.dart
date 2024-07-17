@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran_pak/app/data/local/my_app_color.dart';
 
 class LightThemeColors {
   //dark swatch
@@ -6,15 +7,16 @@ class LightThemeColors {
 
   // static Color customPrimaryColor = const Color(0xFF0f71cb);
   static Color customPrimaryColor = const Color(0xFF13a795);
+  // static Color customPrimaryColor() => MyAppColor.getLightColor();
   static Color customSecondaryColor = const Color(0xFF054075);
   static Color customTertiaryColor = const Color(0xFF98bafa);
 
-  static Color primaryColor = customPrimaryColor;
+  static Color primaryColor() => customPrimaryColor;
   static Color secondaryColor = customSecondaryColor;
   static Color tertiaryColor = customTertiaryColor;
 
   //SCAFFOLD
-  // static Color scaffoldBackgroundColor = primaryColor;
+  // static Color scaffoldBackgroundColor = primaryColor();
   static const Color scaffoldBackgroundColor = Color(0xFFFFFFFF); //? White
   // static const Color scaffoldBackgroundColor = Color(0xFFfbfbfb); //?
   // static const Color scaffoldBackgroundColor = Color(0xFFf5f5f5); //? Light Gray
@@ -30,14 +32,14 @@ class LightThemeColors {
 
   //APPBAR
   // static Color appBarColor = const Color(0xFFe65203);
-  static Color appBarColor = primaryColor;
+  static Color appBarColor = primaryColor.call();
 
   //ICONS
   static Color appBarIconsColor = Colors.white;
-  static Color iconColor = primaryColor;
+  static Color iconColor = primaryColor.call();
 
   //BUTTON
-  static Color buttonColor = primaryColor;
+  static Color buttonColor = primaryColor.call();
   static const Color buttonTextColor = Colors.white;
   static const Color buttonDisabledColor = Colors.grey;
   static const Color buttonDisabledTextColor = Colors.black;
@@ -49,7 +51,7 @@ class LightThemeColors {
   static const Color hintTextColor = Color(0xff686868);
 
   //chip
-  static Color chipBackground = primaryColor;
+  static Color chipBackground = primaryColor.call();
   static const Color chipTextColor = Colors.white;
 
   // progress bar indicator

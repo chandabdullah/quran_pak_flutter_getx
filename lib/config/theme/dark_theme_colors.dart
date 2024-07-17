@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:quran_pak/app/data/local/my_app_color.dart';
 
 class DarkThemeColors {
   //dark swatch
 
   static Color customPrimaryColor = const Color(0xFF078dc4);
+  // static Color customPrimaryColor() => MyAppColor.getDarkColor();
   static Color customSecondaryColor = const Color(0xFF4268b3);
   static Color customTertiaryColor = const Color(0xFF98bafa);
 
-  static Color primaryColor = customPrimaryColor;
+  static Color primaryColor() => customPrimaryColor;
   static Color secondaryColor = customSecondaryColor;
   // static const Color primaryColor = Color(0xFFF0F0F0);
   // static const Color primaryColor = Color(0xFF7343be);
@@ -28,7 +30,7 @@ class DarkThemeColors {
   static const Color iconColor = Colors.white;
 
   //BUTTON
-  static Color buttonColor = primaryColor;
+  static Color buttonColor = primaryColor();
   static const Color buttonTextColor = Colors.black;
   static const Color buttonDisabledColor = Colors.grey;
   static const Color buttonDisabledTextColor = Colors.black;

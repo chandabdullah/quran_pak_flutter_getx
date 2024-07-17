@@ -38,14 +38,15 @@ class LocalizationService extends Translations {
     // check if the language is supported
     if (!isLanguageSupported(languageCode)) return;
     // update current language in shared pref
-    MySharedPref.setCurrentLanguage(languageCode);
+    // MySharedPref.setCurrentLanguage(languageCode); // TODO:
     await Get.updateLocale(supportedLanguages[languageCode]!);
   }
 
   /// check if the language is english
-  static bool isItEnglish() =>
-      MySharedPref.getCurrentLocal().languageCode.toLowerCase().contains('en');
+  // TODO:
+  // static bool isItEnglish() =>
+  //     MySharedPref.getCurrentLocal().languageCode.toLowerCase().contains('en');
 
   /// get current locale
-  static Locale getCurrentLocal() => MySharedPref.getCurrentLocal();
+  // static Locale getCurrentLocal() => MySharedPref.getCurrentLocal(); // TODO:
 }

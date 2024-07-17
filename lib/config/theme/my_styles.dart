@@ -37,8 +37,8 @@ class MyStyles {
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.focused)) {
                 return isLightTheme
-                    ? LightThemeColors.primaryColor
-                    : DarkThemeColors.primaryColor;
+                    ? LightThemeColors.primaryColor.call()
+                    : DarkThemeColors.primaryColor.call();
               }
               if (states.contains(MaterialState.error)) {
                 return Colors.red;
@@ -65,14 +65,14 @@ class MyStyles {
         }),
 
         // prefixIconColor: isLightTheme
-        //     ? LightThemeColors.primaryColor
-        //     : DarkThemeColors.primaryColor,
+        //     ? LightThemeColors.primaryColor.call()
+        //     : DarkThemeColors.primaryColor.call(),
         suffixIconColor: isLightTheme
-            ? LightThemeColors.primaryColor
-            : DarkThemeColors.primaryColor,
+            ? LightThemeColors.primaryColor.call()
+            : DarkThemeColors.primaryColor.call(),
         focusColor: isLightTheme
-            ? LightThemeColors.primaryColor
-            : DarkThemeColors.primaryColor,
+            ? LightThemeColors.primaryColor.call()
+            : DarkThemeColors.primaryColor.call(),
       );
 
   ///app bar theme
@@ -318,8 +318,8 @@ class MyStyles {
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.pressed)) {
                 return isLightTheme
-                    ? LightThemeColors.primaryColor.withOpacity(.1)
-                    : DarkThemeColors.primaryColor.withOpacity(.1);
+                    ? LightThemeColors.primaryColor.call().withOpacity(.1)
+                    : DarkThemeColors.primaryColor.call().withOpacity(.1);
               } else if (states.contains(MaterialState.disabled)) {
                 return isLightTheme
                     ? LightThemeColors.buttonDisabledColor
@@ -338,8 +338,8 @@ class MyStyles {
           side: MaterialStateProperty.all<BorderSide?>(
             BorderSide(
               color: isLightTheme
-                  ? LightThemeColors.primaryColor
-                  : DarkThemeColors.primaryColor,
+                  ? LightThemeColors.primaryColor.call()
+                  : DarkThemeColors.primaryColor.call(),
               width: 1.0,
             ),
           ),
@@ -356,15 +356,15 @@ class MyStyles {
           //   (Set<MaterialState> states) {
           //     if (states.contains(MaterialState.pressed)) {
           //       return isLightTheme
-          //           ? LightThemeColors.primaryColor
-          //           : DarkThemeColors.primaryColor;
+          //           ? LightThemeColors.primaryColor.call()
+          //           : DarkThemeColors.primaryColor.call();
           //     } else if (states.contains(MaterialState.disabled)) {
           //       return isLightTheme
           //           ? LightThemeColors.buttonDisabledColor
           //           : DarkThemeColors.buttonDisabledColor;
           //     }
           //     return isLightTheme
-          //         ? LightThemeColors.primaryColor
+          //         ? LightThemeColors.primaryColor.call()
           //         : DarkThemeColors
           //             .primaryColor; // Use the component's default.
           //   },
