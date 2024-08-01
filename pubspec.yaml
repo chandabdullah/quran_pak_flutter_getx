@@ -17,7 +17,7 @@ dependencies:
   get_storage: ^2.1.1
   google_fonts: ^6.2.1
   flutter_islamic_icons: ^1.0.2
-  geolocator: ^9.0.1
+  geolocator: ^11.0.0
   flutter_svg: ^2.0.10+1
   flutter_native_splash: ^2.2.19
   flutter_launcher_icons: ^0.13.1
@@ -29,7 +29,10 @@ dependencies:
   intl: ^0.19.0
   adhan: ^2.0.0+1
   uicons: ^1.0.1
+  connectivity_plus: ^6.0.3
+  hijri: ^3.0.0
   # flutter_qiblah_update: ^2.0.3
+  # flutter_qiblah: ^3.0.3
 
 dev_dependencies: 
   flutter_lints: 4.0.0

@@ -1,4 +1,4 @@
-part of my_share_preferences;
+part of 'my_shared_pref.dart';
 
 enum AppTheme {
   Light,

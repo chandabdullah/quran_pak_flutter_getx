@@ -2,46 +2,67 @@ import 'package:adhan/adhan.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:location/location.dart';
+import 'package:quran_pak/app/data/local/my_shared_pref.dart';
+import 'package:quran_pak/app/services/connectivity_service.dart';
 import 'package:quran_pak/app/services/location_service.dart';
+import 'package:quran_pak/utils/date_time_utils.dart';
 import 'package:turn_page_transition/turn_page_transition.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 class HomeController extends GetxController {
+  HijriCalendar islamicDate() =>
+      DateTime.now().toLocal().adjustHijriDateFunction();
+
+  bool isInternetAvailable = true;
+
   PrayerTimes? prayerTimes;
+  PrayerTimes? nextPrayerTimes;
+  SunnahTimes? sunnahTimes;
+
+  DateTime get today => DateTime.now().toLocal();
+  DateTime? currentPrayerTime() => prayerTimes?.timeForPrayer(
+        prayerTimes!.currentPrayer(),
+      );
   DateTime? nextPrayerTime() => prayerTimes?.timeForPrayer(
         prayerTimes!.nextPrayer(),
       );
 
-  Coordinates? coordinates;
+  DateTime? savedDateTime = MyDateTime.getDateTime();
+  Coordinates? coordinates = MyCoordinates.getCoordinates();
 
   final TurnPageController turnPageController = TurnPageController(
     direction: TurnDirection.leftToRight,
   );
 
   getCurrentLocation() async {
-    print('----');
     LocationData? location = await LocationService.getCurrentLocation();
-    print(location);
 
     if (location == null) return;
     if (location.latitude == null) return;
     if (location.longitude == null) return;
 
     coordinates = Coordinates(location.latitude!, location.longitude!);
-    print(coordinates);
 
     update();
   }
 
   getPrayerTime() {
     if (coordinates == null) return;
+    MyCoordinates.saveCoordinates(coordinates!);
 
     final params = CalculationMethod.karachi.getParameters();
     params.madhab = Madhab.hanafi;
     prayerTimes = PrayerTimes.today(coordinates!, params);
-    // final qibla = Qibla(coordinates!);
-    // print("direction: ${qibla.direction}");
+    nextPrayerTimes = PrayerTimes.utc(
+      coordinates!,
+      DateComponents(today.year, today.month, today.day + 1),
+      params,
+    );
+    if (prayerTimes != null) sunnahTimes = SunnahTimes(prayerTimes!);
+
+    MyDateTime.saveDateTime(DateTime.now().toLocal());
   }
 
   // getPrayerTime() {
@@ -88,10 +109,24 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
+  Future<void> checkLocationAndConnectivity() async {
+    if (coordinates == null ||
+        savedDateTime == null ||
+        (savedDateTime?.isToday() == false)) {
+      if (await ConnectivityService.checkInternetConnectivity()) {
+        await getCurrentLocation();
+      } else {
+        isInternetAvailable = false;
+        update();
+      }
+    }
+  }
+
   @override
   void onReady() async {
-    await getCurrentLocation();
+    await checkLocationAndConnectivity();
     await getPrayerTime();
+    update();
     // var permission = await Geolocator.requestPermission();
     // print("name: ${permission.name}");
     super.onReady();

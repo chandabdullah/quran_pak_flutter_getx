@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quran_pak/app/data/local/my_app_color.dart';
 
 class DarkThemeColors {
   //dark swatch

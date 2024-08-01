@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:quran_pak/app/data/colors_list.dart';
-import 'package:quran_pak/app/models/app_color_model.dart';
-import 'package:quran_pak/utils/color_utils.dart';
+part of 'my_shared_pref.dart';
 
 class MyAppColor {
   static final GetStorage _storage = GetStorage();

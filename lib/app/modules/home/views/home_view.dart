@@ -29,13 +29,16 @@ class HomeView extends GetView<HomeController> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "9 Ramadhan 1445 H",
+              controller.islamicDate().toFormat('dd MMMM yyyy'),
               style: Get.textTheme.bodyLarge?.copyWith(
                 color: Get.theme.appBarTheme.iconTheme?.color,
               ),
             ),
             Text(
-              "Faisalabad, Pakistan",
+              // "Faisalabad, Pakistan",
+              DateFormat(DateFormat.YEAR_ABBR_MONTH_WEEKDAY_DAY).format(
+                DateTime.now().toLocal(),
+              ),
               style: Get.textTheme.bodySmall?.copyWith(
                 color: Get.theme.appBarTheme.iconTheme?.color,
               ),
@@ -88,13 +91,20 @@ class HomeView extends GetView<HomeController> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                "9 Ramadhan 1445 H",
+                                controller
+                                    .islamicDate()
+                                    .toFormat('dd MMMM yyyy'),
                                 style: Get.textTheme.bodyLarge?.copyWith(
                                   color: Get.theme.appBarTheme.iconTheme?.color,
                                 ),
                               ),
                               Text(
-                                "Faisalabad, Pakistan",
+                                // "Faisalabad, Pakistan",
+                                DateFormat(
+                                        DateFormat.YEAR_ABBR_MONTH_WEEKDAY_DAY)
+                                    .format(
+                                  DateTime.now().toLocal(),
+                                ),
                                 style: Get.textTheme.bodySmall?.copyWith(
                                   color: Get.theme.appBarTheme.iconTheme?.color,
                                 ),
@@ -122,16 +132,24 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ),
                     Text(
-                      controller.nextPrayerTime().toLocalDateFormat(),
+                      controller.nextPrayerTime() == null
+                          ? (controller.nextPrayerTimes
+                                  ?.timeForPrayer(Prayer.fajr))
+                              .toLocalDateFormat()
+                          : controller.nextPrayerTime().toLocalDateFormat(),
                       textAlign: TextAlign.center,
                       style: Get.textTheme.displayLarge?.copyWith(
                         color: Get.theme.appBarTheme.iconTheme?.color,
                       ),
                     ),
                     Text(
-                      "${controller.prayerTimes?.nextPrayer().name.capitalize}"
-                      " "
-                      "${timeLeft(DateTime.now(), controller.nextPrayerTime() ?? DateTime.now())}",
+                      controller.nextPrayerTime() == null
+                          ? ("${Prayer.fajr.name.capitalize}"
+                              " "
+                              "${timeLeft(DateTime.now(), controller.nextPrayerTimes?.timeForPrayer(Prayer.fajr) ?? DateTime.now())}")
+                          : ("${controller.prayerTimes?.nextPrayer().name.capitalize}"
+                              " "
+                              "${timeLeft(DateTime.now(), controller.nextPrayerTime() ?? DateTime.now())}"),
                       textAlign: TextAlign.center,
                       style: Get.textTheme.bodyMedium?.copyWith(
                         color: Get.theme.appBarTheme.iconTheme?.color,

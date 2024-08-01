@@ -9,6 +9,8 @@ import 'package:geolocator/geolocator.dart';
 // import 'package:geolocator/geolocator.dart';
 
 import 'package:get/get.dart';
+import 'package:quran_pak/app/constants/app_constants.dart';
+import 'package:quran_pak/app/data/local/my_shared_pref.dart';
 
 import '../controllers/qibla_direction_controller.dart';
 
@@ -24,11 +26,15 @@ class QiblaDirectionView extends GetView<QiblaDirectionController> {
         ),
         body: Builder(builder: (_) {
           if (controller.hasPermissions) {
-            return Column(
-              children: <Widget>[
-                _buildManualReader(context),
-                Expanded(child: _buildCompass()),
-              ],
+            return Padding(
+              padding: const EdgeInsets.all(kPadding),
+              child: Column(
+                children: <Widget>[
+                  // _buildManualReader(context),
+                  Expanded(child: _buildCompass()),
+                  // QiblahCompassWidget(),
+                ],
+              ),
             );
           } else {
             return _buildPermissionSheet();
@@ -109,38 +115,31 @@ class QiblaDirectionView extends GetView<QiblaDirectionController> {
           );
         }
 
-        double? direction = snapshot.data!.heading;
+        double? direction = snapshot.data?.heading;
 
         // if direction is null, then device does not support this sensor
-        // show error message
-        if (direction == null)
+        if (direction == null) {
           return Center(
-            child: Text("Device does not have sensors !"),
+            child: Text("Device does not have sensors!"),
           );
-// return Material(
-//           shape: CircleBorder(),
-//           clipBehavior: Clip.antiAlias,
-//           elevation: 4.0,
-//           child: Container(
-//             padding: EdgeInsets.all(16.0),
-//             alignment: Alignment.center,
-//             decoration: BoxDecoration(
-//               shape: BoxShape.circle,
-//             ),
-//             child: Transform.rotate(
-//               angle: (direction * (math.pi / 180) * -1),
-//               child: SvgPicture.asset('assets/svg/qibla.svg'),
-//             ),
-//           ),
-//         );
+        }
 
-        final _compassSvg = SvgPicture.asset('assets/svg/qibla.svg');
+        final _compassSvg = SvgPicture.asset(
+          MyDarkMode.getThemeIsLight()
+              ? 'assets/svg/qibla.svg'
+              : 'assets/svg/qibla_dark.svg',
+        );
         final _needleSvg = SvgPicture.asset(
           'assets/svg/needle.svg',
           fit: BoxFit.contain,
           height: 300,
           alignment: Alignment.center,
         );
+
+        double qiblaDirection = (controller.qibla?.direction ?? 0);
+
+        // Ensure qiblaDirection is within 0-360 degrees
+        qiblaDirection = qiblaDirection % 360;
 
         return Stack(
           alignment: Alignment.center,
@@ -149,16 +148,16 @@ class QiblaDirectionView extends GetView<QiblaDirectionController> {
               angle: (direction * (math.pi / 180) * -1),
               child: _compassSvg,
             ),
-            Transform.rotate(
-              angle: (direction * (math.pi / 180) * -1),
-              // angle: (qiblahDirection.qiblah * (math.pi / 180) * -1),
-              alignment: Alignment.center,
-              child: _needleSvg,
-            ),
-            Positioned(
-              bottom: 8,
-              child: Text("${controller.lastRead?.heading}°"),
-            )
+            if (controller.qibla?.direction != null)
+              Transform.rotate(
+                angle: (qiblaDirection * (math.pi / 180)),
+                alignment: Alignment.center,
+                child: _needleSvg,
+              ),
+            // Positioned(
+            //   bottom: 8,
+            //   child: Text("${controller.lastRead?.heading}°"),
+            // )
           ],
         );
       },
@@ -306,18 +305,18 @@ class QiblaDirectionView extends GetView<QiblaDirectionController> {
 //           alignment: Alignment.center,
 //           children: <Widget>[
 //             Transform.rotate(
-//               angle: (qiblahDirection.direction * (pi / 180) * -1),
+//               angle: (qiblahDirection.direction * (math.pi / 180) * -1),
 //               child: _compassSvg,
 //             ),
 //             Transform.rotate(
-//               angle: (qiblahDirection.qiblah * (pi / 180) * -1),
+//               angle: (qiblahDirection.qiblah * (math.pi / 180) * -1),
 //               alignment: Alignment.center,
 //               child: _needleSvg,
 //             ),
-//             Positioned(
-//               bottom: 8,
-//               child: Text("${qiblahDirection.offset.toStringAsFixed(3)}°"),
-//             )
+//             // Positioned(
+//             //   bottom: 8,
+//             //   child: Text("${qiblahDirection.offset.toStringAsFixed(3)}°"),
+//             // )
 //           ],
 //         );
 //       },

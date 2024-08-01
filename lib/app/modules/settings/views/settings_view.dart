@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -6,9 +7,10 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:quran_pak/app/components/custom_bottomsheet.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
-import 'package:quran_pak/app/data/colors_list.dart';
+import 'package:quran_pak/app/data/local_data/colors_list.dart';
 import 'package:quran_pak/app/data/local/my_shared_pref.dart';
 import 'package:quran_pak/app/modules/home/controllers/home_controller.dart';
+import 'package:quran_pak/app/routes/app_pages.dart';
 import 'package:quran_pak/config/theme/my_theme.dart';
 import 'package:quran_pak/utils/color_utils.dart';
 
@@ -50,19 +52,63 @@ class SettingsView extends GetView<SettingsController> {
                         customListTile(
                           icon: FlutterIslamicIcons.solidCommunity,
                           title: "Islamic Madhhab",
-                          subtitle: "Shafi, Hanbali, Maliki (Standard)",
-                          // iconColor: Colors.deepPurple,
+                          subtitleWidget: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Shia",
+                                  style: Get.textTheme.bodyMedium?.copyWith(
+                                    fontWeight:
+                                        controller.getIslamicMadhabId == -1
+                                            ? FontWeight.bold
+                                            : null,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ", ",
+                                  style: Get.textTheme.bodyMedium,
+                                ),
+                                TextSpan(
+                                  text: "Shafi",
+                                  style: Get.textTheme.bodyMedium?.copyWith(
+                                    fontWeight:
+                                        controller.getIslamicMadhabId == 0
+                                            ? FontWeight.bold
+                                            : null,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ", ",
+                                  style: Get.textTheme.bodyMedium,
+                                ),
+                                TextSpan(
+                                  text: "Hanbali",
+                                  style: Get.textTheme.bodyMedium?.copyWith(
+                                    fontWeight:
+                                        controller.getIslamicMadhabId == 1
+                                            ? FontWeight.bold
+                                            : null,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          subtitle: controller.getIslamicMadhab,
                           iconColor: Get.theme.primaryColor,
-                          onTap: () {},
+                          onTap: () {
+                            Get.toNamed(Routes.ISLAMIC_MADHHAB);
+                          },
                         ),
                         const Divider(height: 1),
                         customListTile(
                           icon: Icons.calculate,
                           title: "Calculation Method",
-                          subtitle: "Karachi University, Pakistan",
+                          subtitle: controller.getCalculationMethodName,
                           // iconColor: Colors.teal,
                           iconColor: Get.theme.primaryColor,
-                          onTap: () {},
+                          onTap: () {
+                            Get.toNamed(Routes.CALCULATION_METHODS);
+                          },
                         ),
                         const Divider(height: 1),
                         customListTile(
@@ -72,7 +118,9 @@ class SettingsView extends GetView<SettingsController> {
                               "The adjustment will be effective for daily prayer times",
                           // iconColor: Colors.green,
                           iconColor: Get.theme.primaryColor,
-                          onTap: () {},
+                          onTap: () {
+                            Get.toNamed(Routes.TIME_ADJUSTMENT);
+                          },
                         ),
                         const Divider(height: 1),
                         customListTile(
@@ -216,6 +264,7 @@ class SettingsView extends GetView<SettingsController> {
     required String title,
     required IconData icon,
     String? subtitle,
+    Widget? subtitleWidget,
     Color? iconColor,
     BorderRadius? borderRadius,
     String? trailing,
@@ -239,12 +288,13 @@ class SettingsView extends GetView<SettingsController> {
         title,
         style: Get.textTheme.bodyLarge,
       ),
-      subtitle: subtitle == null
-          ? null
-          : Text(
-              subtitle,
-              style: Get.textTheme.bodySmall,
-            ),
+      subtitle: subtitleWidget ??
+          (subtitle == null
+              ? null
+              : Text(
+                  subtitle,
+                  style: Get.textTheme.bodySmall,
+                )),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
