@@ -161,10 +161,9 @@ class SettingsView extends GetView<SettingsController> {
                           icon: Icons.access_time_filled,
                           title: "Time Format",
                           subtitle: "24 Format",
-                          value: false,
-                          // iconColor: Colors.orange,
+                          value: controller.currentTimeFormat,
                           iconColor: Get.theme.primaryColor,
-                          onChange: (value) {},
+                          onChange: controller.onTimeFormatChange,
                           borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(kBorderRadius),
                             topLeft: Radius.circular(kBorderRadius),

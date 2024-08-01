@@ -16,7 +16,8 @@ part 'my_dark_mode.dart'; //? Dark Mode
 part 'my_coordinates.dart'; //? Coordinates
 part 'my_date.dart'; //? Date
 part 'my_islamic_madhab.dart'; //? Date
-part 'my_calculation_method.dart'; //? Date
+part 'my_calculation_method.dart'; //? Calculation Method
+part 'my_time_format.dart'; //? Time
 
 class MySharedPref {
   // get storage
