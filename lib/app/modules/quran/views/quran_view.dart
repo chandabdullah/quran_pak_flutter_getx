@@ -5,7 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:quran_flutter/quran_flutter.dart';
 
 import 'package:get/get.dart';
+import 'package:quran_pak/app/components/aya_end.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
+import 'package:quran_pak/app/routes/app_pages.dart';
 
 import '../controllers/quran_controller.dart';
 
@@ -31,10 +33,6 @@ class QuranView extends GetView<QuranController> {
               borderWidth: 2,
               borderColor: Get.theme.primaryColor,
               radius: BorderRadius.circular(kBorderRadius),
-              // radius: BorderRadius.circular(8.0),
-              // padding: const EdgeInsets.only(left: 36),
-              // borderWidth: 2.0,
-              // borderColor: Colors.black,
             ),
             tabs: const [
               Tab(text: "Surah"),
@@ -45,17 +43,29 @@ class QuranView extends GetView<QuranController> {
         body: TabBarView(
           children: [
             ListView.separated(
-              itemCount: 114,
+              itemCount: Quran.surahCount,
               separatorBuilder: (BuildContext context, int index) {
-                return const Divider();
+                return Divider(
+                  height: 1,
+                  color: Get.theme.splashColor,
+                );
               },
               itemBuilder: (BuildContext context, int index) {
-                String name = Quran.getSurahNameEnglish(index + 1);
-                String arabicName = Quran.getSurahName(index + 1);
-                var verse = Quran.getTotalVersesInSurah(index + 1);
-                var place = Quran.getSurahType(index + 1);
+                var surahNumber = index + 1;
+                String name = Quran.getSurahNameEnglish(surahNumber);
+                String arabicName = Quran.getSurahName(surahNumber);
+                var verse = Quran.getTotalVersesInSurah(surahNumber);
+                var place = Quran.getSurahType(surahNumber);
                 return ListTile(
-                  leading: Text("${index + 1}"),
+                  onTap: () {
+                    Get.toNamed(
+                      Routes.SURAH_DETAIL,
+                      arguments: {
+                        "surah": index + 1,
+                      },
+                    );
+                  },
+                  leading: AyaEnd(number: surahNumber),
                   minLeadingWidth: 0,
                   title: Text(
                     name,
@@ -78,23 +88,51 @@ class QuranView extends GetView<QuranController> {
               },
             ),
             ListView.separated(
-              itemCount: 30,
+              itemCount: controller.quranJuz.length,
               separatorBuilder: (BuildContext context, int index) {
-                return const Divider();
+                return Divider(
+                  height: 1,
+                  color: Get.theme.splashColor,
+                );
               },
               itemBuilder: (BuildContext context, int index) {
+                var juz = controller.quranJuz[index];
                 var surah = Quran.getSurahVersesInJuzAsList(index + 1);
+                String englishJuz = juz["english"] ?? "";
+                String arabicJuz = juz["arabic"] ?? "";
+
                 return ListTile(
-                  // leading: Text("Juz # ${index + 1}"),
+                  onTap: () {
+                    Get.toNamed(
+                      Routes.JUZ_DETAIL,
+                      arguments: {
+                        "juz": index + 1,
+                        "type": "juz",
+                        "englishJuz": englishJuz,
+                        "arabicJuz": arabicJuz,
+                      },
+                    );
+                  },
+                  leading: AyaEnd(number: index + 1),
                   minLeadingWidth: 0,
                   title: Text(
-                    "Juz # ${index + 1}",
-                    style: Get.textTheme.bodyLarge,
+                    englishJuz,
+                    style: Get.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   subtitle: Text(
-                    "${surah.length}",
+                    "${surah.length} Surah${surah.length == 1 ? '' : 's'}",
                     style: Get.textTheme.bodyMedium?.copyWith(
                       color: Get.theme.primaryColor,
+                    ),
+                  ),
+                  trailing: Text(
+                    arabicJuz,
+                    style: Get.textTheme.titleLarge?.copyWith(
+                      color: Get.theme.primaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: GoogleFonts.amiri().fontFamily,
                     ),
                   ),
                   // trailing: Text(

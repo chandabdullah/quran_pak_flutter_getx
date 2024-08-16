@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
 import 'package:quran_pak/app/services/permissions_service.dart';
 import 'package:quran_pak/config/translations/localization_service.dart';
@@ -23,6 +24,10 @@ void main() async {
       await PermissionHandlerService.checkPermissionsForApplication();
   await Quran.initialize();
 
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(
     ScreenUtilInit(
       // todo add your (Xd / Figma) artboard size

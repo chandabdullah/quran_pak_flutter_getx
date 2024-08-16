@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
+import 'package:quran_pak/app/data/local_data/quran_juz.dart';
 
 class QuranController extends GetxController {
-  //TODO: Implement QuranController
+  List<Map<String, String>> quranJuz = QuranJuz.quranJuz;
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -18,6 +18,4 @@ class QuranController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

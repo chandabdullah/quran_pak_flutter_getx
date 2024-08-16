@@ -13,6 +13,8 @@ abstract class Routes {
   static const ISLAMIC_MADHHAB = _Paths.ISLAMIC_MADHHAB;
   static const HIJRI_ADJUSTMENT = _Paths.HIJRI_ADJUSTMENT;
   static const QURAN = _Paths.QURAN;
+  static const SURAH_DETAIL = _Paths.SURAH_DETAIL;
+  static const JUZ_DETAIL = _Paths.JUZ_DETAIL;
 }
 
 abstract class _Paths {
@@ -27,4 +29,6 @@ abstract class _Paths {
   static const ISLAMIC_MADHHAB = '/islamic-madhhab';
   static const HIJRI_ADJUSTMENT = '/hijri-adjustment';
   static const QURAN = '/quran';
+  static const SURAH_DETAIL = '/surah-detail';
+  static const JUZ_DETAIL = '/juz-detail';
 }

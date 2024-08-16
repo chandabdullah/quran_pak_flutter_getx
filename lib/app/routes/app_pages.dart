@@ -8,6 +8,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/islamic_madhhab/bindings/islamic_madhhab_binding.dart';
 import '../modules/islamic_madhhab/views/islamic_madhhab_view.dart';
+import '../modules/juz_detail/bindings/juz_detail_binding.dart';
+import '../modules/juz_detail/views/juz_detail_view.dart';
 import '../modules/location_permission/bindings/location_permission_binding.dart';
 import '../modules/location_permission/views/location_permission_view.dart';
 import '../modules/qibla_direction/bindings/qibla_direction_binding.dart';
@@ -18,6 +20,8 @@ import '../modules/read_quran/bindings/read_quran_binding.dart';
 import '../modules/read_quran/views/read_quran_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
 import '../modules/settings/views/settings_view.dart';
+import '../modules/surah_detail/bindings/surah_detail_binding.dart';
+import '../modules/surah_detail/views/surah_detail_view.dart';
 import '../modules/time_adjustment/bindings/time_adjustment_binding.dart';
 import '../modules/time_adjustment/views/time_adjustment_view.dart';
 
@@ -78,6 +82,16 @@ class AppPages {
       name: _Paths.QURAN,
       page: () => const QuranView(),
       binding: QuranBinding(),
+    ),
+    GetPage(
+      name: _Paths.SURAH_DETAIL,
+      page: () => const SurahDetailView(),
+      binding: SurahDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.JUZ_DETAIL,
+      page: () => const JuzDetailView(),
+      binding: JuzDetailBinding(),
     ),
   ];
 }
