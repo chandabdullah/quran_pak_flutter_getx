@@ -6,6 +6,7 @@ import '/app/data/local/my_shared_pref.dart';
 import '/config/theme/my_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:quran_flutter/quran_flutter.dart';
 
 import 'package:get/get.dart';
 
@@ -20,6 +21,7 @@ void main() async {
 
   AppPermissions appPermissions =
       await PermissionHandlerService.checkPermissionsForApplication();
+  await Quran.initialize();
 
   runApp(
     ScreenUtilInit(

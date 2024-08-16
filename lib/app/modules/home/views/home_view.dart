@@ -1,7 +1,6 @@
 import 'package:adhan/adhan.dart';
 import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -12,7 +11,6 @@ import 'package:quran_pak/app/constants/app_constants.dart';
 import 'package:quran_pak/app/routes/app_pages.dart';
 import 'package:quran_pak/app/services/payer_name_and_icon.dart';
 import 'package:quran_pak/utils/date_time_utils.dart';
-import 'package:uicons/uicons.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -24,27 +22,50 @@ class HomeView extends GetView<HomeController> {
       return DraggableHome(
         physics: const ScrollPhysics(),
         centerTitle: false,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              controller.islamicDate().toFormat('dd MMMM yyyy'),
-              style: Get.textTheme.bodyLarge?.copyWith(
-                color: Get.theme.appBarTheme.iconTheme?.color,
-              ),
+        title: RichText(
+          text: TextSpan(
+            text: "It's time for ",
+            style: Get.textTheme.bodyMedium?.copyWith(
+              color: Get.theme.appBarTheme.iconTheme?.color,
             ),
-            Text(
-              // "Faisalabad, Pakistan",
-              DateFormat(DateFormat.YEAR_ABBR_MONTH_WEEKDAY_DAY).format(
-                DateTime.now().toLocal(),
+            children: [
+              TextSpan(
+                text: controller.prayerTimes?.currentPrayer().name.capitalize ??
+                    "Fajr",
+                style: Get.textTheme.titleLarge?.copyWith(
+                  color: Get.theme.appBarTheme.iconTheme?.color,
+                ),
               ),
-              style: Get.textTheme.bodySmall?.copyWith(
-                color: Get.theme.appBarTheme.iconTheme?.color,
+              TextSpan(
+                text: " Prayer",
+                style: Get.textTheme.bodyMedium?.copyWith(
+                  color: Get.theme.appBarTheme.iconTheme?.color,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+        // title: Column(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   mainAxisSize: MainAxisSize.min,
+        //   children: [
+        //     Text(
+        //       controller.islamicDate().toFormat('dd MMMM yyyy'),
+        //       style: Get.textTheme.bodyLarge?.copyWith(
+        //         color: Get.theme.appBarTheme.iconTheme?.color,
+        //       ),
+        //     ),
+        //     Text(
+        //       // "Faisalabad, Pakistan",
+        //       DateFormat(DateFormat.YEAR_ABBR_MONTH_WEEKDAY_DAY).format(
+        //         DateTime.now().toLocal(),
+        //       ),
+        //       style: Get.textTheme.bodySmall?.copyWith(
+        //         color: Get.theme.appBarTheme.iconTheme?.color,
+        //       ),
+        //     ),
+        //   ],
+        // ),
         actions: [
           IconButton(
             onPressed: () {
@@ -124,38 +145,83 @@ class HomeView extends GetView<HomeController> {
                       ],
                     ),
                     const Gap(8),
-                    Text(
-                      "Next Prayer",
-                      textAlign: TextAlign.center,
-                      style: Get.textTheme.bodyMedium?.copyWith(
-                        color: Get.theme.appBarTheme.iconTheme?.color,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "It's time for",
+                                textAlign: TextAlign.center,
+                                style: Get.textTheme.bodyMedium?.copyWith(
+                                  color: Get.theme.appBarTheme.iconTheme?.color,
+                                ),
+                              ),
+                              Text(
+                                controller.prayerTimes
+                                        ?.currentPrayer()
+                                        .name
+                                        .capitalize ??
+                                    "Fajr",
+                                textAlign: TextAlign.center,
+                                style: Get.textTheme.headlineLarge?.copyWith(
+                                  color: Get.theme.appBarTheme.iconTheme?.color,
+                                ),
+                              ),
+                              Text(
+                                "Prayer",
+                                textAlign: TextAlign.center,
+                                style: Get.textTheme.bodyMedium?.copyWith(
+                                  color: Get.theme.appBarTheme.iconTheme?.color,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Next Prayer",
+                                textAlign: TextAlign.center,
+                                style: Get.textTheme.bodyMedium?.copyWith(
+                                  color: Get.theme.appBarTheme.iconTheme?.color,
+                                ),
+                              ),
+                              Text(
+                                controller.nextPrayerTime() == null
+                                    ? (controller.nextPrayerTimes
+                                            ?.timeForPrayer(Prayer.fajr))
+                                        .toLocalDateFormat()
+                                    : controller
+                                        .nextPrayerTime()
+                                        .toLocalDateFormat(),
+                                textAlign: TextAlign.center,
+                                style: Get.textTheme.titleLarge?.copyWith(
+                                  color: Get.theme.appBarTheme.iconTheme?.color,
+                                ),
+                              ),
+                              Text(
+                                controller.nextPrayerTime() == null
+                                    ? ("${Prayer.fajr.name.capitalize}"
+                                        " "
+                                        "${timeLeft(DateTime.now(), controller.nextPrayerTimes?.timeForPrayer(Prayer.fajr) ?? DateTime.now())}")
+                                    : ("${controller.prayerTimes?.nextPrayer().name.capitalize}"
+                                        " "
+                                        "${timeLeft(DateTime.now(), controller.nextPrayerTime() ?? DateTime.now())}"),
+                                textAlign: TextAlign.center,
+                                style: Get.textTheme.bodyMedium?.copyWith(
+                                  color: Get.theme.appBarTheme.iconTheme?.color,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      controller.nextPrayerTime() == null
-                          ? (controller.nextPrayerTimes
-                                  ?.timeForPrayer(Prayer.fajr))
-                              .toLocalDateFormat()
-                          : controller.nextPrayerTime().toLocalDateFormat(),
-                      textAlign: TextAlign.center,
-                      style: Get.textTheme.displayLarge?.copyWith(
-                        color: Get.theme.appBarTheme.iconTheme?.color,
-                      ),
-                    ),
-                    Text(
-                      controller.nextPrayerTime() == null
-                          ? ("${Prayer.fajr.name.capitalize}"
-                              " "
-                              "${timeLeft(DateTime.now(), controller.nextPrayerTimes?.timeForPrayer(Prayer.fajr) ?? DateTime.now())}")
-                          : ("${controller.prayerTimes?.nextPrayer().name.capitalize}"
-                              " "
-                              "${timeLeft(DateTime.now(), controller.nextPrayerTime() ?? DateTime.now())}"),
-                      textAlign: TextAlign.center,
-                      style: Get.textTheme.bodyMedium?.copyWith(
-                        color: Get.theme.appBarTheme.iconTheme?.color,
-                      ),
-                    ),
-                    const Gap(20),
+                    const Gap(30),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -214,7 +280,7 @@ class HomeView extends GetView<HomeController> {
                       icon: FlutterIslamicIcons.solidQuran2,
                       text: "Quran",
                       onTap: () {
-                        Get.toNamed(Routes.READ_QURAN);
+                        Get.toNamed(Routes.QURAN);
                       },
                     ),
                     featureCard(

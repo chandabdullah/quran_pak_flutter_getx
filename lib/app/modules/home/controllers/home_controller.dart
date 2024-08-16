@@ -7,6 +7,7 @@ import 'package:location/location.dart';
 import 'package:quran_pak/app/data/local/my_shared_pref.dart';
 import 'package:quran_pak/app/services/connectivity_service.dart';
 import 'package:quran_pak/app/services/location_service.dart';
+import 'package:quran_pak/app/services/prayer_time_service.dart';
 import 'package:quran_pak/utils/date_time_utils.dart';
 import 'package:turn_page_transition/turn_page_transition.dart';
 // import 'package:intl/intl.dart';
@@ -48,15 +49,19 @@ class HomeController extends GetxController {
     update();
   }
 
-  getPrayerTime() {
+  getPrayerTime() async {
     if (coordinates == null) return;
     MyCoordinates.saveCoordinates(coordinates!);
 
-    final params = CalculationMethod.karachi.getParameters();
-    params.madhab = Madhab.hanafi;
+    // final params = CalculationMethod.karachi.getParameters();
+    // params.madhab = Madhab.hanafi;
+
+    Coordinates myCoordinates = await PrayerTimeService.getCoordinates();
+    CalculationParameters params = PrayerTimeService.getParameters();
+
     prayerTimes = PrayerTimes.today(coordinates!, params);
     nextPrayerTimes = PrayerTimes.utc(
-      coordinates!,
+      myCoordinates,
       DateComponents(today.year, today.month, today.day + 1),
       params,
     );

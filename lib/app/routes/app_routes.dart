@@ -11,6 +11,8 @@ abstract class Routes {
   static const CALCULATION_METHODS = _Paths.CALCULATION_METHODS;
   static const TIME_ADJUSTMENT = _Paths.TIME_ADJUSTMENT;
   static const ISLAMIC_MADHHAB = _Paths.ISLAMIC_MADHHAB;
+  static const HIJRI_ADJUSTMENT = _Paths.HIJRI_ADJUSTMENT;
+  static const QURAN = _Paths.QURAN;
 }
 
 abstract class _Paths {
@@ -23,4 +25,6 @@ abstract class _Paths {
   static const CALCULATION_METHODS = '/calculation-methods';
   static const TIME_ADJUSTMENT = '/time-adjustment';
   static const ISLAMIC_MADHHAB = '/islamic-madhhab';
+  static const HIJRI_ADJUSTMENT = '/hijri-adjustment';
+  static const QURAN = '/quran';
 }

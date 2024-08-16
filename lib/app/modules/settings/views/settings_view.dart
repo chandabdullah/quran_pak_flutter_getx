@@ -126,10 +126,12 @@ class SettingsView extends GetView<SettingsController> {
                         customListTile(
                           icon: FlutterIslamicIcons.calendar,
                           title: "Hijri Adjustment",
-                          subtitle: "Auto",
+                          subtitle: controller.getHijriAdjustment(),
                           // iconColor: Colors.amber,
                           iconColor: Get.theme.primaryColor,
-                          onTap: () {},
+                          onTap: () {
+                            Get.toNamed(Routes.HIJRI_ADJUSTMENT);
+                          },
                           borderRadius: const BorderRadius.only(
                             bottomRight: Radius.circular(kBorderRadius),
                             bottomLeft: Radius.circular(kBorderRadius),

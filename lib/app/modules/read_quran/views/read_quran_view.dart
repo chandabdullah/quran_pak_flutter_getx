@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:turn_page_transition/turn_page_transition.dart';
 
 import '../controllers/read_quran_controller.dart';
@@ -15,10 +16,10 @@ class ReadQuranView extends GetView<ReadQuranController> {
       ),
       body: TurnPageView.builder(
         controller: controller.turnPageController,
-        itemCount: 10,
+        itemCount: 30,
         itemBuilder: (context, index) => Container(
-          height: double.infinity,
-          width: double.infinity,
+          height: Get.height,
+          width: Get.width,
           color: Get.theme.cardColor,
           alignment: Alignment.center,
           child: Center(

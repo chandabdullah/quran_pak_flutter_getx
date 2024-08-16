@@ -27,6 +27,13 @@ class SettingsController extends GetxController {
     homeController.update();
   }
 
+  String getHijriAdjustment() {
+    int hijriAdjustment = MyHijriAdjustment.getHijriAdjustment();
+    return hijriAdjustment == 0
+        ? "Auto"
+        : "${hijriAdjustment > 0 ? "+$hijriAdjustment" : hijriAdjustment} days";
+  }
+
   @override
   void onInit() {
     super.onInit();

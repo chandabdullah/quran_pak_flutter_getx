@@ -3,7 +3,7 @@ version: 1.0.0+1
 publish_to: none
 description: A new Flutter project.
 environment: 
-  sdk: '>=3.3.4 <4.0.0'
+  sdk: '>=3.4.3 <4.0.0'
 
 dependencies: 
   cupertino_icons: ^1.0.6
@@ -31,6 +31,9 @@ dependencies:
   uicons: ^1.0.1
   connectivity_plus: ^6.0.3
   hijri: ^3.0.0
+  bottom_picker: ^2.8.0
+  container_tab_indicator: ^0.3.0
+  quran_flutter: ^1.0.2
   # flutter_qiblah_update: ^2.0.3
   # flutter_qiblah: ^3.0.3
 

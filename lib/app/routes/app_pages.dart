@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/calculation_methods/bindings/calculation_methods_binding.dart';
 import '../modules/calculation_methods/views/calculation_methods_view.dart';
+import '../modules/hijri_adjustment/bindings/hijri_adjustment_binding.dart';
+import '../modules/hijri_adjustment/views/hijri_adjustment_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/islamic_madhhab/bindings/islamic_madhhab_binding.dart';
@@ -10,6 +12,8 @@ import '../modules/location_permission/bindings/location_permission_binding.dart
 import '../modules/location_permission/views/location_permission_view.dart';
 import '../modules/qibla_direction/bindings/qibla_direction_binding.dart';
 import '../modules/qibla_direction/views/qibla_direction_view.dart';
+import '../modules/quran/bindings/quran_binding.dart';
+import '../modules/quran/views/quran_view.dart';
 import '../modules/read_quran/bindings/read_quran_binding.dart';
 import '../modules/read_quran/views/read_quran_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
@@ -64,6 +68,16 @@ class AppPages {
       name: _Paths.ISLAMIC_MADHHAB,
       page: () => const IslamicMadhhabView(),
       binding: IslamicMadhhabBinding(),
+    ),
+    GetPage(
+      name: _Paths.HIJRI_ADJUSTMENT,
+      page: () => const HijriAdjustmentView(),
+      binding: HijriAdjustmentBinding(),
+    ),
+    GetPage(
+      name: _Paths.QURAN,
+      page: () => const QuranView(),
+      binding: QuranBinding(),
     ),
   ];
 }

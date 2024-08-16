@@ -28,9 +28,8 @@ extension AdjustHijriDate on DateTime {
   HijriCalendar adjustHijriDateFunction() {
     HijriCalendar adjustedHijriDate = HijriCalendar.fromDate(
       add(
-        const Duration(
-          days: -1,
-          // days: MyHijriAdjustment.getHijriAdjustment(),
+        Duration(
+          days: MyHijriAdjustment.getHijriAdjustment(),
         ),
       ),
     );
