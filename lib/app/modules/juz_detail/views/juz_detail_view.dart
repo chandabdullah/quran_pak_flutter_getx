@@ -114,6 +114,9 @@ class JuzDetailView extends GetView<JuzDetailController> {
                     content: ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: kSpacing,
+                      ),
                       itemCount: surahAndVerse.surahVerse.length,
                       separatorBuilder: (BuildContext context, int index) {
                         return Divider(
@@ -123,10 +126,8 @@ class JuzDetailView extends GetView<JuzDetailController> {
                       },
                       itemBuilder: (BuildContext context, int index) {
                         Verse verse = surahAndVerse.surahVerse[index];
-                        Verse verseEng = surahAndVerse.surahVerseEng[index];
                         return VerseContainer(
                           verse: verse,
-                          translatedVerse: verseEng,
                         );
                       },
                     ),

@@ -12,6 +12,8 @@ import '../modules/juz_detail/bindings/juz_detail_binding.dart';
 import '../modules/juz_detail/views/juz_detail_view.dart';
 import '../modules/location_permission/bindings/location_permission_binding.dart';
 import '../modules/location_permission/views/location_permission_view.dart';
+import '../modules/prayer_time/bindings/prayer_time_binding.dart';
+import '../modules/prayer_time/views/prayer_time_view.dart';
 import '../modules/qibla_direction/bindings/qibla_direction_binding.dart';
 import '../modules/qibla_direction/views/qibla_direction_view.dart';
 import '../modules/quran/bindings/quran_binding.dart';
@@ -92,6 +94,11 @@ class AppPages {
       name: _Paths.JUZ_DETAIL,
       page: () => const JuzDetailView(),
       binding: JuzDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.PRAYER_TIME,
+      page: () => const PrayerTimeView(),
+      binding: PrayerTimeBinding(),
     ),
   ];
 }

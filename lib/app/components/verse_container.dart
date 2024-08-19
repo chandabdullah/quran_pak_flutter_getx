@@ -10,7 +10,7 @@ class VerseContainer extends StatelessWidget {
   const VerseContainer({
     super.key,
     required this.verse,
-    this.translatedVerse,
+    // this.translatedVerse,
     // this.englishAya,
     // this.arabicAya,
     // this.verseNumber,
@@ -20,10 +20,15 @@ class VerseContainer extends StatelessWidget {
   // final String? arabicAya;
   // final int? verseNumber;
   final Verse verse;
-  final Verse? translatedVerse;
+  // final Verse? translatedVerse;
 
   @override
   Widget build(BuildContext context) {
+    Verse translatedVerse = Quran.getVerse(
+      surahNumber: verse.surahNumber,
+      verseNumber: verse.verseNumber,
+      language: QuranLanguage.urdu,
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: kPadding,
@@ -48,13 +53,14 @@ class VerseContainer extends StatelessWidget {
                   ),
                 ]),
           ),
-          if (translatedVerse != null) const Gap(25),
-          if (translatedVerse != null)
-            Text(
-              "${translatedVerse?.verseNumber}. ${translatedVerse?.text}",
-              textAlign: TextAlign.start,
-              style: Get.textTheme.bodyMedium,
-            ),
+          const Gap(25),
+          // if (translatedVerse != null)
+          Text(
+            "${translatedVerse.verseNumber}. ${translatedVerse.text}",
+            textAlign: TextAlign.start,
+            style: Get.textTheme.bodyMedium,
+            textDirection: TextDirection.rtl,
+          ),
         ],
       ),
     );

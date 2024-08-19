@@ -113,11 +113,9 @@ class SurahDetailView extends GetView<SurahDetailController> {
                       },
                       itemBuilder: (BuildContext context, int index) {
                         Verse arabicAya = controller.surahArabicAya[index];
-                        Verse? englishAya = controller.surahEnglishAya[index];
                         // var hideAya = surah.number == 1 && index == 0;
                         return VerseContainer(
                           verse: arabicAya,
-                          translatedVerse: englishAya,
                         );
                       },
                     )

@@ -298,6 +298,9 @@ class HomeView extends GetView<HomeController> {
                       icon: FlutterIslamicIcons.solidKowtow,
                       // icon: FlutterIslamicIcons.solidPrayingPerson,
                       text: "Prayer Time",
+                      onTap: () {
+                        Get.toNamed(Routes.PRAYER_TIME);
+                      },
                     ),
                     // featureCard(
                     //   icon: FlutterIslamicIcons.solidZakat,
