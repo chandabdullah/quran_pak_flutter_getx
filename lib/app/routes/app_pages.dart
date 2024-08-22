@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/calculation_methods/bindings/calculation_methods_binding.dart';
 import '../modules/calculation_methods/views/calculation_methods_view.dart';
+import '../modules/hadith/bindings/hadith_binding.dart';
+import '../modules/hadith/views/hadith_view.dart';
 import '../modules/hijri_adjustment/bindings/hijri_adjustment_binding.dart';
 import '../modules/hijri_adjustment/views/hijri_adjustment_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -24,6 +26,8 @@ import '../modules/settings/bindings/settings_binding.dart';
 import '../modules/settings/views/settings_view.dart';
 import '../modules/surah_detail/bindings/surah_detail_binding.dart';
 import '../modules/surah_detail/views/surah_detail_view.dart';
+import '../modules/tasbih/bindings/tasbih_binding.dart';
+import '../modules/tasbih/views/tasbih_view.dart';
 import '../modules/time_adjustment/bindings/time_adjustment_binding.dart';
 import '../modules/time_adjustment/views/time_adjustment_view.dart';
 
@@ -99,6 +103,16 @@ class AppPages {
       name: _Paths.PRAYER_TIME,
       page: () => const PrayerTimeView(),
       binding: PrayerTimeBinding(),
+    ),
+    GetPage(
+      name: _Paths.TASBIH,
+      page: () => const TasbihView(),
+      binding: TasbihBinding(),
+    ),
+    GetPage(
+      name: _Paths.HADITH,
+      page: () => const HadithView(),
+      binding: HadithBinding(),
     ),
   ];
 }

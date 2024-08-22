@@ -42,7 +42,7 @@ class VerseContainer extends StatelessWidget {
             text: TextSpan(
                 text: "${verse.text} ",
                 style: Get.textTheme.bodyLarge?.copyWith(
-                  fontFamily: GoogleFonts.amiri().fontFamily,
+                  fontFamily: arabicFont,
                 ),
                 children: [
                   TextSpan(

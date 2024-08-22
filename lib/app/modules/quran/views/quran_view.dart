@@ -1,7 +1,5 @@
 import 'package:container_tab_indicator/container_tab_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-// import 'package:quran/Quran.dart' as quran;
 import 'package:quran_flutter/quran_flutter.dart';
 
 import 'package:get/get.dart';
@@ -81,7 +79,7 @@ class QuranView extends GetView<QuranController> {
                     arabicName,
                     style: Get.textTheme.titleLarge?.copyWith(
                       color: Get.theme.primaryColor,
-                      fontFamily: GoogleFonts.amiri().fontFamily,
+                      fontFamily: arabicFont,
                     ),
                   ),
                 );
@@ -132,14 +130,14 @@ class QuranView extends GetView<QuranController> {
                     style: Get.textTheme.titleLarge?.copyWith(
                       color: Get.theme.primaryColor,
                       fontWeight: FontWeight.bold,
-                      fontFamily: GoogleFonts.amiri().fontFamily,
+                      fontFamily: arabicFont,
                     ),
                   ),
                   // trailing: Text(
                   //   arabicName,
                   //   style: Get.textTheme.titleLarge?.copyWith(
                   //     color: Get.theme.primaryColor,
-                  //     fontFamily: GoogleFonts.amiri().fontFamily,
+                  //     fontFamily: arabicFont,
                   //   ),
                   // ),
                 );

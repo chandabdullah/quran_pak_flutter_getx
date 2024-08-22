@@ -27,6 +27,14 @@
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
+
+		<string>NSLocationWhenInUseUsageDescription</string>
+		<key>Need location permission to get prayer time according to region</key>
+		<string>NSLocationAlwaysUsageDescription</string>
+		<key>Need location permission to get prayer time according to region</key>
+		<string>NSLocationAlwaysAndWhenInUseUsageDescription</string>
+		<key>Need location permission to get prayer time according to region</key>
+		
 		<string>Main</string>
 		<key>UISupportedInterfaceOrientations</key>
 		<array>

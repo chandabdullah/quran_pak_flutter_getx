@@ -17,17 +17,19 @@ class SurahDetailView extends GetView<SurahDetailController> {
     return GetBuilder<SurahDetailController>(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          forceMaterialTransparency: true,
+          // forceMaterialTransparency: true,
           title: FittedBox(
             child: RichText(
               text: TextSpan(
                 text: '${controller.surah?.nameEnglish} - ',
-                style: Get.textTheme.titleLarge,
+                style: Get.textTheme.titleLarge?.copyWith(
+                  color: Get.theme.appBarTheme.foregroundColor,
+                ),
                 children: [
                   TextSpan(
                     text: controller.surah?.name,
                     style: TextStyle(
-                      fontFamily: GoogleFonts.amiri().fontFamily,
+                      fontFamily: arabicFont,
                     ),
                   )
                 ],
@@ -92,7 +94,7 @@ class SurahDetailView extends GetView<SurahDetailController> {
                             Quran.bismillah,
                             textAlign: TextAlign.center,
                             style: Get.textTheme.bodyLarge?.copyWith(
-                              fontFamily: GoogleFonts.amiriQuran().fontFamily,
+                              fontFamily: arabicFont,
                             ),
                           ),
                           const Gap(10),

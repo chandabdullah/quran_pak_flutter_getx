@@ -17,17 +17,20 @@ class JuzDetailView extends GetView<JuzDetailController> {
     return GetBuilder<JuzDetailController>(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          forceMaterialTransparency: true,
+          // forceMaterialTransparency: true,
           title: FittedBox(
             child: RichText(
               text: TextSpan(
                 text: '${controller.englishJuz} - ',
-                style: Get.textTheme.titleLarge,
+                style: Get.textTheme.titleLarge?.copyWith(
+                  color: Get.theme.appBarTheme.foregroundColor,
+                ),
                 children: [
                   TextSpan(
                     text: controller.arabicJuz,
                     style: TextStyle(
-                      fontFamily: GoogleFonts.amiri().fontFamily,
+                      color: Get.theme.appBarTheme.foregroundColor,
+                      fontFamily: arabicFont,
                     ),
                   )
                 ],

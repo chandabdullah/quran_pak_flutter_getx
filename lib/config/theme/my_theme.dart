@@ -12,7 +12,7 @@ class MyTheme {
     bool isLight = MyDarkMode.getThemeIsLight();
 
     return ThemeData(
-      // fontFamily: GoogleFonts.amiriQuran().fontFamily,
+      // fontFamily: arabicFont,
       fontFamily: GoogleFonts.dosis().fontFamily,
 
       useMaterial3: true,

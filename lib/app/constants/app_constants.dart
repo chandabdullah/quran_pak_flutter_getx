@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const String appName = 'Mumin';
+const String appName = 'Momin';
 
 Duration apiCallAfter = const Duration(hours: 1);
+
+String? get arabicFont => GoogleFonts.thasadith().fontFamily;
 
 const double kPadding = 16.0;
 const double kSpacing = 12.0;

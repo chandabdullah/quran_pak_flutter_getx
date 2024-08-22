@@ -270,22 +270,41 @@ class HomeView extends GetView<HomeController> {
                   style: Get.textTheme.bodyLarge,
                 ),
                 const Gap(10),
-                Wrap(
-                  alignment: WrapAlignment.spaceAround,
-                  runAlignment: WrapAlignment.start,
-                  spacing: kSpacing,
-                  runSpacing: kSpacing,
+                GridView(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(0),
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: kPadding,
+                    crossAxisSpacing: kPadding,
+                    childAspectRatio: 1.1 / 1,
+                  ),
+                  // alignment: WrapAlignment.spaceAround,
+                  // runAlignment: WrapAlignment.start,
+                  // spacing: kSpacing,
+                  // runSpacing: kSpacing,
                   children: [
                     featureCard(
                       icon: FlutterIslamicIcons.solidQuran2,
                       text: "Quran",
+                      subtitle: "Explore the Quran\nby Surah or Juz",
                       onTap: () {
                         Get.toNamed(Routes.QURAN);
                       },
                     ),
                     featureCard(
+                      icon: FlutterIslamicIcons.solidMuslim2,
+                      text: "Hadith",
+                      subtitle: "Discover 6 Authentic\nHadith Collections",
+                      // onTap: () {
+                      //   Get.toNamed(Routes.HADITH);
+                      // },
+                    ),
+                    featureCard(
                       icon: FlutterIslamicIcons.solidQibla,
                       text: "Qibla",
+                      subtitle: "Locate the Qibla\nwith Precision",
                       onTap: () {
                         Get.toNamed(Routes.QIBLA_DIRECTION);
                       },
@@ -293,86 +312,81 @@ class HomeView extends GetView<HomeController> {
                     featureCard(
                       icon: FlutterIslamicIcons.solidTasbihHand,
                       text: "Tasbih",
+                      subtitle: "Track and Count\nYour Tasbih",
+                      onTap: () {
+                        Get.toNamed(Routes.TASBIH);
+                      },
                     ),
                     featureCard(
                       icon: FlutterIslamicIcons.solidKowtow,
-                      // icon: FlutterIslamicIcons.solidPrayingPerson,
                       text: "Prayer Time",
+                      subtitle: "Accurate Daily Prayer\nTimings",
                       onTap: () {
                         Get.toNamed(Routes.PRAYER_TIME);
                       },
                     ),
+                    featureCard(
+                      icon: FlutterIslamicIcons.solidMosque,
+                      text: "Masjid",
+                      subtitle: "Find Nearby Masjids\nin Your Area",
+                    ),
                     // featureCard(
                     //   icon: FlutterIslamicIcons.solidZakat,
                     //   text: "Zakat",
+                    //   subtitle: "Easily Calculate\nYour Zakat",
                     // ),
                   ],
                 ),
                 const Gap(20),
-                Text(
-                  "Resume Reading",
-                  style: Get.textTheme.bodyLarge,
-                ),
-                const Gap(10),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Get.theme.cardColor,
-                    borderRadius: BorderRadius.circular(kBorderRadius),
-                    border: Border.all(
-                      color: Get.theme.dividerColor,
-                    ),
-                  ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: kSpacing,
-                    ),
-                    tileColor: Get.theme.appBarTheme.iconTheme?.color,
-                    leading: Icon(
-                      FlutterIslamicIcons.solidQuran2,
-                      size: 30.sp,
-                      color: Get.theme.primaryColor,
-                    ),
-                    title: const Text("Start, where you left"),
-                    subtitle: RichText(
-                      text: TextSpan(
-                        text: "02 ",
-                        style: Get.textTheme.bodyMedium?.copyWith(
-                          color: Get.theme.primaryColor,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: "Al Bakara",
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                        ],
+                if (controller.isResumeReading)
+                  Column(
+                    children: [
+                      Text(
+                        "Resume Reading",
+                        style: Get.textTheme.bodyLarge,
                       ),
-                    ),
-                    trailing: TextButton(
-                      onPressed: () {},
-                      child: Text("Resume"),
-                    ),
+                      const Gap(10),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Get.theme.cardColor,
+                          borderRadius: BorderRadius.circular(kBorderRadius),
+                          border: Border.all(
+                            color: Get.theme.dividerColor,
+                          ),
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing,
+                          ),
+                          tileColor: Get.theme.appBarTheme.iconTheme?.color,
+                          leading: Icon(
+                            FlutterIslamicIcons.solidQuran2,
+                            size: 30.sp,
+                            color: Get.theme.primaryColor,
+                          ),
+                          title: const Text("Start, where you left"),
+                          subtitle: RichText(
+                            text: TextSpan(
+                              text: "02 ",
+                              style: Get.textTheme.bodyMedium?.copyWith(
+                                color: Get.theme.primaryColor,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: "Al Bakara",
+                                  style: Get.textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          ),
+                          trailing: TextButton(
+                            onPressed: () {},
+                            child: Text("Resume"),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                // Container(
-                //   padding: const EdgeInsets.all(kSpacing),
-                //   decoration: BoxDecoration(
-                //     borderRadius: BorderRadius.circular(kBorderRadius),
-                //     border: Border.all(
-                //       color: Get.theme.primaryColor,
-                //     ),
-                //   ),
-                //   child: Row(
-                //     children: [
-                //       Icon(
-                //         FlutterIslamicIcons.solidQuran2,
-                //       ),
-                //       const Gap(20),
-                //       Expanded(
-                //         child: Text("Surah Kahf"),
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -421,30 +435,92 @@ class HomeView extends GetView<HomeController> {
   Widget featureCard({
     required IconData icon,
     required String text,
+    String? subtitle,
     Function()? onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(kPadding),
-            decoration: BoxDecoration(
-              color: Get.theme.primaryColor,
-              borderRadius: BorderRadius.circular(kBorderRadius),
-            ),
-            child: Icon(
-              icon,
-              color: Get.theme.appBarTheme.iconTheme?.color,
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(kBorderRadius),
+        onTap: onTap,
+        splashColor: Get.theme.primaryColor.withOpacity(.2),
+        highlightColor: Get.theme.primaryColor.withOpacity(.3),
+        child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          padding: const EdgeInsets.all(kPadding),
+          decoration: BoxDecoration(
+            // color: Get.theme.primaryColor,
+            borderRadius: BorderRadius.circular(kBorderRadius),
+            border: Border.all(
+              color: onTap == null
+                  ? Get.theme.disabledColor
+                  : Get.theme.primaryColor,
+              width: 1,
             ),
           ),
-          const Gap(4),
-          Text(
-            text,
-            style: Get.textTheme.bodyMedium,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: FittedBox(
+                  alignment: Alignment.centerRight,
+                  child: Icon(
+                    icon,
+                    color: onTap == null ? Get.theme.disabledColor : null,
+                    // color: Get.theme.appBarTheme.iconTheme?.color,
+                    size: 50.sp,
+                  ),
+                ),
+              ),
+              const Gap(5),
+              Text(
+                text,
+                textAlign: TextAlign.start,
+                style: Get.textTheme.headlineSmall?.copyWith(
+                  color: onTap == null ? Get.theme.disabledColor : null,
+                  // color: Get.theme.appBarTheme.iconTheme?.color,
+                ),
+              ),
+              if (subtitle != null)
+                Text(
+                  subtitle,
+                  textAlign: TextAlign.start,
+                  style: Get.textTheme.bodyMedium?.copyWith(
+                    color: onTap == null ? Get.theme.disabledColor : null,
+                    // color: Get.theme.appBarTheme.iconTheme?.color,
+                  ),
+                ),
+            ],
           ),
-        ],
+        ),
       ),
     );
+    // return GestureDetector(
+    //   onTap: onTap,
+    //   child: Column(
+    //     children: [
+    //       Expanded(
+    //         child: Container(
+    //           width: double.infinity,
+    //           padding: const EdgeInsets.all(kPadding),
+    //           decoration: BoxDecoration(
+    //             color: Get.theme.primaryColor,
+    //             borderRadius: BorderRadius.circular(kBorderRadius),
+    //           ),
+    //           child: Icon(
+    //             icon,
+    //             color: Get.theme.appBarTheme.iconTheme?.color,
+    //           ),
+    //         ),
+    //       ),
+    //       const Gap(4),
+    //       Text(
+    //         text,
+    //         style: Get.textTheme.bodyMedium,
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 }

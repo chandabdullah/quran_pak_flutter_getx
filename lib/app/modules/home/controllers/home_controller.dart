@@ -17,6 +17,7 @@ class HomeController extends GetxController {
       DateTime.now().toLocal().adjustHijriDateFunction();
 
   bool isInternetAvailable = true;
+  bool get isResumeReading => false;
 
   PrayerTimes? prayerTimes;
   PrayerTimes? nextPrayerTimes;
