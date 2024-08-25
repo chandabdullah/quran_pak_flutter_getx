@@ -1,4 +1,4 @@
-package com.nls.quran_pak
+package com.nls.momin
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -36,6 +36,7 @@ dependencies:
   quran_flutter: ^1.0.2
   sticky_headers: ^0.3.0+2
   flutter_advanced_calendar: ^1.4.1
+  string_similarity: ^2.1.1
   # flutter_qiblah_update: ^2.0.3
   # flutter_qiblah: ^3.0.3
 

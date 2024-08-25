@@ -22,29 +22,34 @@ class HomeView extends GetView<HomeController> {
       return DraggableHome(
         physics: const ScrollPhysics(),
         centerTitle: false,
-        title: RichText(
-          text: TextSpan(
-            text: "It's time for ",
-            style: Get.textTheme.bodyMedium?.copyWith(
-              color: Get.theme.appBarTheme.iconTheme?.color,
-            ),
-            children: [
-              TextSpan(
-                text: controller.prayerTimes?.currentPrayer().name.capitalize ??
-                    "Fajr",
-                style: Get.textTheme.titleLarge?.copyWith(
-                  color: Get.theme.appBarTheme.iconTheme?.color,
+        title: (controller.prayerTimes == null)
+            ? const SizedBox()
+            : RichText(
+                text: TextSpan(
+                  text: "It's time for ",
+                  style: Get.textTheme.bodyMedium?.copyWith(
+                    color: Get.theme.appBarTheme.iconTheme?.color,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: controller.prayerTimes
+                              ?.currentPrayer()
+                              .name
+                              .capitalize ??
+                          "",
+                      style: Get.textTheme.titleLarge?.copyWith(
+                        color: Get.theme.appBarTheme.iconTheme?.color,
+                      ),
+                    ),
+                    TextSpan(
+                      text: " Prayer",
+                      style: Get.textTheme.bodyMedium?.copyWith(
+                        color: Get.theme.appBarTheme.iconTheme?.color,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              TextSpan(
-                text: " Prayer",
-                style: Get.textTheme.bodyMedium?.copyWith(
-                  color: Get.theme.appBarTheme.iconTheme?.color,
-                ),
-              ),
-            ],
-          ),
-        ),
         // title: Column(
         //   crossAxisAlignment: CrossAxisAlignment.start,
         //   mainAxisSize: MainAxisSize.min,
