@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:gap/gap.dart';
 import 'package:quran_flutter/quran_flutter.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
+import 'package:quran_pak/app/data/local/my_shared_pref.dart';
 import 'package:quran_pak/utils/quran_utils.dart';
 
 class VerseContainer extends StatelessWidget {
   const VerseContainer({
     super.key,
     required this.verse,
+    this.arabicFontSize,
+    this.translatedFontSize,
+    this.showVerseSymbol = true,
     // this.translatedVerse,
     // this.englishAya,
     // this.arabicAya,
@@ -21,13 +24,17 @@ class VerseContainer extends StatelessWidget {
   // final int? verseNumber;
   final Verse verse;
   // final Verse? translatedVerse;
+  final double? arabicFontSize;
+  final double? translatedFontSize;
+  final bool showVerseSymbol;
 
   @override
   Widget build(BuildContext context) {
+    QuranLanguage language = MyQuranTranslation.getTranslationLanguage();
     Verse translatedVerse = Quran.getVerse(
       surahNumber: verse.surahNumber,
       verseNumber: verse.verseNumber,
-      language: QuranLanguage.urdu,
+      language: language,
     );
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -43,24 +50,34 @@ class VerseContainer extends StatelessWidget {
                 text: "${verse.text} ",
                 style: Get.textTheme.bodyLarge?.copyWith(
                   fontFamily: arabicFont,
+                  fontSize: arabicFontSize ??
+                      (MyFontSize.getArabicFontSize() *
+                          MyFontSize.defaultArabicMultiply),
                 ),
                 children: [
-                  TextSpan(
-                    text: QuranUtils.getVerseEndSymbol(verse.verseNumber),
-                    style: Get.textTheme.bodyLarge?.copyWith(
-                      color: Get.theme.primaryColor,
+                  if (showVerseSymbol)
+                    TextSpan(
+                      text: QuranUtils.getVerseEndSymbol(verse.verseNumber),
+                      style: Get.textTheme.bodyLarge?.copyWith(
+                        color: Get.theme.primaryColor,
+                      ),
                     ),
-                  ),
                 ]),
           ),
-          const Gap(25),
-          // if (translatedVerse != null)
-          Text(
-            "${translatedVerse.verseNumber}. ${translatedVerse.text}",
-            textAlign: TextAlign.start,
-            style: Get.textTheme.bodyMedium,
-            textDirection: TextDirection.rtl,
-          ),
+          if (MyQuranTranslation.getShowQuranTranslation()) const Gap(25),
+          if (MyQuranTranslation.getShowQuranTranslation())
+            Text(
+              "${showVerseSymbol ? "${translatedVerse.verseNumber}. " : ""}"
+              "${translatedVerse.text}",
+              textAlign: TextAlign.start,
+              style: Get.textTheme.bodyMedium?.copyWith(
+                fontSize: translatedFontSize ??
+                    (MyFontSize.getTranslatedFontSize() *
+                        MyFontSize.defaultTranslatedMultiply),
+              ),
+              textDirection:
+                  language.isRTL ? TextDirection.rtl : TextDirection.ltr,
+            ),
         ],
       ),
     );

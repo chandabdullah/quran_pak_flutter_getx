@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
 import 'package:quran_pak/app/components/custom_bottomsheet.dart';
+import 'package:quran_pak/app/components/custom_listtile.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
 import 'package:quran_pak/app/data/local_data/colors_list.dart';
 import 'package:quran_pak/app/data/local/my_shared_pref.dart';
@@ -49,7 +50,7 @@ class SettingsView extends GetView<SettingsController> {
                     type: MaterialType.transparency,
                     child: Column(
                       children: [
-                        customListTile(
+                        CustomListTile(
                           icon: FlutterIslamicIcons.solidCommunity,
                           title: "Islamic Madhhab",
                           subtitleWidget: RichText(
@@ -100,7 +101,7 @@ class SettingsView extends GetView<SettingsController> {
                           },
                         ),
                         const Divider(height: 1),
-                        customListTile(
+                        CustomListTile(
                           icon: Icons.calculate,
                           title: "Calculation Method",
                           subtitle: controller.getCalculationMethodName,
@@ -111,7 +112,7 @@ class SettingsView extends GetView<SettingsController> {
                           },
                         ),
                         const Divider(height: 1),
-                        customListTile(
+                        CustomListTile(
                           icon: FlutterIslamicIcons.solidPrayingPerson,
                           title: "Prayer Time Adjustment",
                           subtitle:
@@ -123,7 +124,7 @@ class SettingsView extends GetView<SettingsController> {
                           },
                         ),
                         const Divider(height: 1),
-                        customListTile(
+                        CustomListTile(
                           icon: FlutterIslamicIcons.calendar,
                           title: "Hijri Adjustment",
                           subtitle: controller.getHijriAdjustment(),
@@ -159,7 +160,7 @@ class SettingsView extends GetView<SettingsController> {
                     type: MaterialType.transparency,
                     child: Column(
                       children: [
-                        customSwitchListTile(
+                        CustomSwitchListTile(
                           icon: Icons.access_time_filled,
                           title: "Time Format",
                           subtitle: "24 Format",
@@ -172,7 +173,7 @@ class SettingsView extends GetView<SettingsController> {
                           ),
                         ),
                         const Divider(height: 1),
-                        customSwitchListTile(
+                        CustomSwitchListTile(
                           icon: Icons.dark_mode_rounded,
                           title: "Dark Mode",
                           subtitle:
@@ -198,7 +199,7 @@ class SettingsView extends GetView<SettingsController> {
                           // ),
                         ),
                         // const Divider(height: 1),
-                        // customListTile(
+                        // CustomListTile(
                         //   icon: Icons.color_lens,
                         //   title: "App Color",
                         //   subtitle: "Default",
@@ -258,98 +259,6 @@ class SettingsView extends GetView<SettingsController> {
         ),
       );
     });
-  }
-
-  Widget customListTile({
-    Function()? onTap,
-    required String title,
-    required IconData icon,
-    String? subtitle,
-    Widget? subtitleWidget,
-    Color? iconColor,
-    BorderRadius? borderRadius,
-    String? trailing,
-  }) {
-    return ListTile(
-      dense: true,
-      onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: kSpacing,
-        vertical: 0,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: borderRadius ?? BorderRadius.zero,
-      ),
-      iconColor: iconColor,
-      leading: Icon(
-        icon,
-        size: 25.sp,
-      ),
-      title: Text(
-        title,
-        style: Get.textTheme.bodyLarge,
-      ),
-      subtitle: subtitleWidget ??
-          (subtitle == null
-              ? null
-              : Text(
-                  subtitle,
-                  style: Get.textTheme.bodySmall,
-                )),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (trailing != null)
-            Text(
-              trailing,
-              style: Get.textTheme.bodySmall,
-            ),
-          Icon(
-            Icons.keyboard_arrow_right_rounded,
-            color: Get.theme.hintColor,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget customSwitchListTile({
-    required bool value,
-    Function(bool)? onChange,
-    required String title,
-    String? subtitle,
-    required IconData icon,
-    Color? iconColor,
-    BorderRadius? borderRadius,
-  }) {
-    return SwitchListTile(
-      value: value,
-      onChanged: onChange,
-      dense: true,
-      // onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: kSpacing,
-        vertical: 0,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: borderRadius ?? BorderRadius.zero,
-      ),
-      controlAffinity: ListTileControlAffinity.trailing,
-      secondary: Icon(
-        icon,
-        color: iconColor,
-      ),
-      title: Text(
-        title,
-        style: Get.textTheme.bodyLarge,
-      ),
-      subtitle: subtitle == null
-          ? null
-          : Text(
-              subtitle,
-              style: Get.textTheme.bodyMedium,
-            ),
-    );
   }
 
   selectAppColor(BuildContext context) {

@@ -32,4 +32,7 @@ class QuranUtils {
 
     return '\u06dd$arabicNumeric';
   }
+
+  static bool showBismillah(surahNumber) =>
+      (surahNumber != 1 && surahNumber != 9);
 }

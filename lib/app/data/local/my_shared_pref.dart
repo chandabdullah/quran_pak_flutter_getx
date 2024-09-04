@@ -3,6 +3,7 @@ library my_share_preferences;
 import 'package:adhan/adhan.dart' as adhan;
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:quran_flutter/quran_flutter.dart';
 import 'package:quran_pak/app/data/local_data/calculation_methods.dart';
 import 'package:quran_pak/app/data/local_data/colors_list.dart';
 import 'package:quran_pak/app/data/local_data/islamic_madhhabs.dart';
@@ -23,6 +24,8 @@ part 'my_time_format.dart'; //? Time
 part 'my_prayer_adjustment.dart'; //? Prayer Time Adjustment
 part 'my_hijri_adjustment.dart'; //? Hijri Adjustment
 part 'my_midnight_method.dart'; //? Midnight
+part 'my_font_size.dart'; //? Font Size
+part 'my_quran_translation.dart'; //? Quran Translation
 
 class MySharedPref {
   // get storage

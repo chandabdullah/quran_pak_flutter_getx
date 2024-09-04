@@ -18,6 +18,7 @@ abstract class Routes {
   static const PRAYER_TIME = _Paths.PRAYER_TIME;
   static const TASBIH = _Paths.TASBIH;
   static const HADITH = _Paths.HADITH;
+  static const QURAN_SETTINGS = _Paths.QURAN_SETTINGS;
 }
 
 abstract class _Paths {
@@ -37,4 +38,5 @@ abstract class _Paths {
   static const PRAYER_TIME = '/prayer-time';
   static const TASBIH = '/tasbih';
   static const HADITH = '/hadith';
+  static const QURAN_SETTINGS = '/quran-settings';
 }

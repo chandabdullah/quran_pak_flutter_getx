@@ -114,25 +114,29 @@ class LocationPermissionView extends GetView<LocationPermissionController> {
                     Text(
                       "Enable Location",
                       textAlign: TextAlign.center,
-                      style: theme.textTheme.titleLarge,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                     Text(
                       "To provide near by drivers to your location please grant permission for the application to access your device s geo location",
                       textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                     // const Gap(20),
                     ElevatedButton(
                       style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
+                        padding: WidgetStateProperty.all(
                           const EdgeInsets.symmetric(
                             horizontal: kPadding,
                           ),
                         ),
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                           Colors.white,
                         ),
-                        foregroundColor: MaterialStateProperty.all(
+                        foregroundColor: WidgetStateProperty.all(
                           Get.theme.primaryColor,
                         ),
                       ),

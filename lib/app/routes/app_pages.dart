@@ -20,6 +20,8 @@ import '../modules/qibla_direction/bindings/qibla_direction_binding.dart';
 import '../modules/qibla_direction/views/qibla_direction_view.dart';
 import '../modules/quran/bindings/quran_binding.dart';
 import '../modules/quran/views/quran_view.dart';
+import '../modules/quran_settings/bindings/quran_settings_binding.dart';
+import '../modules/quran_settings/views/quran_settings_view.dart';
 import '../modules/read_quran/bindings/read_quran_binding.dart';
 import '../modules/read_quran/views/read_quran_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
@@ -113,6 +115,11 @@ class AppPages {
       name: _Paths.HADITH,
       page: () => const HadithView(),
       binding: HadithBinding(),
+    ),
+    GetPage(
+      name: _Paths.QURAN_SETTINGS,
+      page: () => const QuranSettingsView(),
+      binding: QuranSettingsBinding(),
     ),
   ];
 }

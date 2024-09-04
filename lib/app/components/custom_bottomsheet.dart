@@ -22,6 +22,10 @@ showCustomBottomSheet(
       showDragHandle: false,
       builder: (context) {
         return Container(
+          constraints: BoxConstraints(
+            maxHeight: Get.height * .9,
+            minHeight: Get.height / 2,
+          ),
           padding: EdgeInsets.only(
             bottom: kBottomPadding(context),
           ),
@@ -39,56 +43,13 @@ showCustomBottomSheet(
               ),
               const Gap(12),
               content ?? const SizedBox(),
-              // ListTile(
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.circular(
-              //       kBorderRadius,
-              //     ),
-              //   ),
-              //   dense: true,
-              //   onTap: () {
-              //     if (Get.isBottomSheetOpen ?? false) {
-              //       Get.back();
-              //     }
-              //   },
-              //   title: Text(
-              //     "English",
-              //     style:
-              //         theme.textTheme.titleMedium!.copyWith(
-              //       color: theme.primaryColor,
-              //       fontWeight: FontWeight.bold,
-              //     ),
-              //   ),
-              //   trailing: Icon(
-              //     UIcons.regularRounded.check,
-              //     color: theme.primaryColor,
-              //     size: 20,
-              //   ),
-              // ),
-              // const Divider(
-              //   height: 1,
-              // ),
-              // ListTile(
-              //   dense: true,
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.circular(
-              //       kBorderRadius,
-              //     ),
-              //   ),
-              //   onTap: () {
-              //     if (Get.isBottomSheetOpen ?? false) {
-              //       Get.back();
-              //     }
-              //   },
-              //   title: Text(
-              //     "اردو",
-              //     style: theme.textTheme.titleMedium,
-              //   ),
-              // ),
             ],
           ),
         );
       },
     ),
+    isScrollControlled: true,
+    enableDrag: true,
+    ignoreSafeArea: false,
   );
 }

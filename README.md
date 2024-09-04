@@ -1,6 +1,18 @@
 ## Remaining
-- Search in Quran
-- Font Style & Size adjustment in Quran
-- Hadith
-- Tasbih
-- Masjid
+
+- Change Language
+
+### Quran
+<!-- - Search in Quran  -->
+- Font Style adjustment
+<!-- - Font Size adjustment -->
+- Quran info
+- Continue Reading
+<!-- - Next & Previous Surah -->
+
+### Hadith
+- 6 Collections
+
+### Tasbih
+
+### Near by Masjid

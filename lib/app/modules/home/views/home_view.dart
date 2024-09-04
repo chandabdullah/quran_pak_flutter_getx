@@ -293,7 +293,7 @@ class HomeView extends GetView<HomeController> {
                     featureCard(
                       icon: FlutterIslamicIcons.solidQuran2,
                       text: "Quran",
-                      subtitle: "Explore the Quran\nby Surah or Juz",
+                      subtitle: "Read the Quran\nby Surah or Juz",
                       onTap: () {
                         Get.toNamed(Routes.QURAN);
                       },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quran_pak/app/routes/app_pages.dart';
 import '/app/components/verse_container.dart';
 import '/app/constants/app_constants.dart';
 import '/utils/quran_utils.dart';
@@ -38,6 +39,14 @@ class JuzDetailView extends GetView<JuzDetailController> {
             ),
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Get.toNamed(Routes.QURAN_SETTINGS);
+              },
+              icon: const Icon(Icons.settings),
+            ),
+          ],
           bottom: PreferredSize(
               preferredSize: const Size.fromHeight(50),
               child: Container(

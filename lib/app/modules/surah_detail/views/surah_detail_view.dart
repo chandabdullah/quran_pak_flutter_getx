@@ -4,6 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
+import 'package:quran_pak/app/routes/app_pages.dart';
+import 'package:quran_pak/app/widgets/custom_buttons.dart';
 import '/app/components/verse_container.dart';
 import '/utils/quran_utils.dart';
 import 'package:quran_flutter/quran_flutter.dart';
@@ -37,13 +39,19 @@ class SurahDetailView extends GetView<SurahDetailController> {
             ),
           ),
           centerTitle: true,
-          // actions: [
-          //   if (controller.isSurah)
-          //     IconButton(
-          //       onPressed: () {},
-          //       icon: const Icon(Icons.headphones_outlined),
-          //     ),
-          // ],
+          actions: [
+            IconButton(
+              onPressed: () {
+                Get.toNamed(Routes.QURAN_SETTINGS);
+              },
+              icon: const Icon(Icons.settings),
+            ),
+            // if (controller.isSurah)
+            //   IconButton(
+            //     onPressed: () {},
+            //     icon: const Icon(Icons.headphones_outlined),
+            //   ),
+          ],
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(50),
             child: Container(
@@ -81,12 +89,12 @@ class SurahDetailView extends GetView<SurahDetailController> {
                 ),
               )
             : SingleChildScrollView(
+                controller: controller.scrollController,
                 padding: const EdgeInsets.symmetric(vertical: kSpacing),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (controller.surah?.number != 1 &&
-                        controller.surah?.number != 9)
+                    if (QuranUtils.showBismillah(controller.surah?.number))
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -120,6 +128,29 @@ class SurahDetailView extends GetView<SurahDetailController> {
                           verse: arabicAya,
                         );
                       },
+                    ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kPadding,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomTextButton(
+                            text: "Previous Surah",
+                            onPress: controller.surahNumber <= 1
+                                ? null
+                                : controller.onPreviousSurah,
+                          ),
+                          CustomTextButton(
+                            text: "Next Surah",
+                            onPress: controller.surahNumber >= 114
+                                ? null
+                                : controller.onNextSurah,
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 ),

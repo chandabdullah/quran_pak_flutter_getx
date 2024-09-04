@@ -1,55 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quran_flutter/quran_flutter.dart';
 import 'package:quran_pak/app/data/local_data/quran_juz.dart';
-import 'package:string_similarity/string_similarity.dart';
 
 class QuranController extends GetxController
     with GetSingleTickerProviderStateMixin {
   late TabController tabController;
 
+  TextEditingController searchController = TextEditingController();
+
   List<Map<String, String>> quranJuz = QuranJuz.quranJuz;
   List<Map<String, String>> filteredQuranJuz = QuranJuz.quranJuz;
+
+  List<Surah> allSurah = [];
+  List<Surah> filteredSurah = [];
 
   // late AnimationController animationController;
 
   bool showSearch = false;
 
+  getAllSurah() {
+    allSurah.clear();
+    filteredSurah.clear();
+    allSurah.addAll(Quran.getSurahAsList());
+    filteredSurah.addAll(Quran.getSurahAsList());
+    print("Surah: ${filteredSurah.length}");
+    update();
+  }
+
   onSearchClick() {
     showSearch = !showSearch;
+
+    if (!showSearch) {
+      restoreSurahAndJuz();
+      searchController.text = '';
+    }
     // showSearch ? animationController.forward() : animationController.reverse();
     update();
   }
 
   onInputChange(String text) {
     String searchQuery = text.trim().toLowerCase();
+    if (searchQuery.isEmpty) {
+      restoreSurahAndJuz();
+      return;
+    }
+
+    // Juz
+    if (tabController.index == 0) {
+      filteredSurah = allSurah
+          .where((surah) =>
+              (surah.name.contains(searchQuery)) ||
+              (surah.nameEnglish
+                  .replaceAll("-", " ")
+                  .toLowerCase()
+                  .contains(searchQuery)))
+          .toList();
+    }
 
     // Juz
     if (tabController.index == 1) {
-      if (text.isEmpty) {
-        filteredQuranJuz = quranJuz;
-        return;
-      }
-
       filteredQuranJuz = QuranJuz.quranJuz
           .where((juz) =>
-              // isSimilarTo(juz["english"].toString(), searchQuery)
-              //  ||
-              // isSimilarTo(juz["urdu"].toString(), searchQuery)
               (juz["english"]?.toLowerCase().contains(searchQuery) ?? false) ||
               (juz["urdu"]?.contains(searchQuery) ?? false))
           .toList();
-      // filteredQuranJuz = quranJuz.where(test)
     }
-
-    print("filteredQuranJuz: ${filteredQuranJuz.length}");
 
     update();
   }
 
-  bool isSimilarTo(String value, String query) {
-    double result = StringSimilarity.compareTwoStrings(value, query);
-    print("$value: $result");
-    return result > 0.2;
+  restoreSurahAndJuz() {
+    filteredQuranJuz = quranJuz;
+    filteredSurah = allSurah;
+    update();
   }
 
   @override
@@ -60,8 +84,12 @@ class QuranController extends GetxController
       initialIndex: 0,
     );
     tabController.addListener(() {
+      restoreSurahAndJuz();
+      searchController.text = '';
       update();
     });
+
+    getAllSurah();
     // animationController = AnimationController(
     //   vsync: this,
     //   duration: const Duration(milliseconds: 200),

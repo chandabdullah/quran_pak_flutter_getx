@@ -4,8 +4,10 @@ import 'package:quran_flutter/quran_flutter.dart';
 
 import 'package:get/get.dart';
 import 'package:quran_pak/app/components/aya_end.dart';
+import 'package:quran_pak/app/components/custom_bottomsheet.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
 import 'package:quran_pak/app/routes/app_pages.dart';
+import 'package:quran_pak/utils/quran_utils.dart';
 
 import '../controllers/quran_controller.dart';
 
@@ -32,8 +34,13 @@ class QuranView extends GetView<QuranController> {
               ),
               child: controller.showSearch
                   ? TextField(
+                      keyboardType: TextInputType.text,
+                      controller: controller.searchController,
                       onChanged: controller.onInputChange,
                       cursorColor: Get.theme.appBarTheme.foregroundColor,
+                      style: Get.textTheme.titleMedium?.copyWith(
+                        color: Get.theme.appBarTheme.foregroundColor,
+                      ),
                       decoration: InputDecoration(
                         hintText: controller.tabController.index == 0
                             ? "Search Surah..."
@@ -43,9 +50,14 @@ class QuranView extends GetView<QuranController> {
                         ),
                       ),
                     )
-                  : const Text(
-                      'Quran',
-                      key: ValueKey('icon2'),
+                  : GestureDetector(
+                      onTap: () {
+                        aboutQuran(context);
+                      },
+                      child: const Text(
+                        'Quran',
+                        key: ValueKey('icon2'),
+                      ),
                     ),
             ),
             // title:
@@ -72,7 +84,13 @@ class QuranView extends GetView<QuranController> {
                         ),
                 ),
                 onPressed: controller.onSearchClick,
-              )
+              ),
+              // IconButton(
+              //   onPressed: () {
+              //     Get.toNamed(Routes.QURAN_SETTINGS);
+              //   },
+              //   icon: const Icon(Icons.settings),
+              // ),
               // IconButton(
               //   onPressed: controller.onSearchClick,
               //   icon: AnimatedIcon(
@@ -105,7 +123,7 @@ class QuranView extends GetView<QuranController> {
             controller: controller.tabController,
             children: [
               ListView.separated(
-                itemCount: Quran.surahCount,
+                itemCount: controller.filteredSurah.length,
                 separatorBuilder: (BuildContext context, int index) {
                   return Divider(
                     height: 1,
@@ -113,11 +131,13 @@ class QuranView extends GetView<QuranController> {
                   );
                 },
                 itemBuilder: (BuildContext context, int index) {
-                  var surahNumber = index + 1;
-                  String name = Quran.getSurahNameEnglish(surahNumber);
-                  String arabicName = Quran.getSurahName(surahNumber);
-                  var verse = Quran.getTotalVersesInSurah(surahNumber);
-                  var place = Quran.getSurahType(surahNumber);
+                  Surah surah = controller.filteredSurah[index];
+                  var surahNumber = surah.number;
+                  // String name = Quran.getSurahNameEnglish(surahNumber);
+                  // String arabicName = Quran.getSurahName(surahNumber);
+                  // var verse = Quran.getTotalVersesInSurah(surahNumber);
+                  // var place = Quran.getSurahType(surahNumber);
+
                   return ListTile(
                     onTap: () {
                       Get.toNamed(
@@ -130,17 +150,19 @@ class QuranView extends GetView<QuranController> {
                     leading: AyaEnd(number: surahNumber),
                     minLeadingWidth: 0,
                     title: Text(
-                      name,
+                      surah.nameEnglish,
                       style: Get.textTheme.bodyLarge,
                     ),
                     subtitle: Text(
-                      "$verse Verses | ${place.name}",
+                      "${surah.verseCount} Verses"
+                      " | "
+                      "${QuranUtils.getSurahPlace(surah.type)}",
                       style: Get.textTheme.bodyMedium?.copyWith(
                         color: Get.theme.primaryColor,
                       ),
                     ),
                     trailing: Text(
-                      arabicName,
+                      surah.name,
                       style: Get.textTheme.titleLarge?.copyWith(
                         color: Get.theme.primaryColor,
                         fontFamily: arabicFont,
@@ -217,4 +239,27 @@ class QuranView extends GetView<QuranController> {
       );
     });
   }
+}
+
+aboutQuran(BuildContext context) {
+  showCustomBottomSheet(
+    context,
+    centerTitle: true,
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const SizedBox(height: 25, width: 25),
+        Text(
+          "About Quran",
+          style: Get.textTheme.titleLarge,
+        ),
+        IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(Icons.close),
+        ),
+      ],
+    ),
+  );
 }
