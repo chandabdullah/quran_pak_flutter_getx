@@ -42,3 +42,18 @@ Download Momin today and carry your faith with you, wherever you go
 <img  src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"  alt="Get it on Google Play"  width="200"  height="80"  />
 
 </a>
+
+### Preview
+
+<html>
+    <div style="display: flex; flex-wrap: wrap;">
+<img style="margin-right: 10px; margin-bottom: 10px;" src="https://github.com/chandabdullah/quran_pak_flutter_getx/blob/main/assets/presentations/1.png" height="500" alt="1.png"/>
+<img style="margin-right: 10px; margin-bottom: 10px;" src="https://github.com/chandabdullah/quran_pak_flutter_getx/blob/main/assets/presentations/2.png" height="500" alt="1.png"/>
+<img style="margin-right: 10px; margin-bottom: 10px;" src="https://github.com/chandabdullah/quran_pak_flutter_getx/blob/main/assets/presentations/3.png" height="500" alt="1.png"/>
+<img style="margin-right: 10px; margin-bottom: 10px;" src="https://github.com/chandabdullah/quran_pak_flutter_getx/blob/main/assets/presentations/4.png" height="500" alt="1.png"/>
+<img style="margin-right: 10px; margin-bottom: 10px;" src="https://github.com/chandabdullah/quran_pak_flutter_getx/blob/main/assets/presentations/5.png" height="500" alt="1.png"/>
+<img style="margin-right: 10px; margin-bottom: 10px;" src="https://github.com/chandabdullah/quran_pak_flutter_getx/blob/main/assets/presentations/6.png" height="500" alt="1.png"/>
+<img style="margin-right: 10px; margin-bottom: 10px;" src="https://github.com/chandabdullah/quran_pak_flutter_getx/blob/main/assets/presentations/7.png" height="500" alt="1.png"/>
+<img style="margin-right: 10px; margin-bottom: 10px;" src="https://github.com/chandabdullah/quran_pak_flutter_getx/blob/main/assets/presentations/8.png" height="500" alt="1.png"/>
+    </div>
+</html>
