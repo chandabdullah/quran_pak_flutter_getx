@@ -4,6 +4,8 @@ import '../modules/calculation_methods/bindings/calculation_methods_binding.dart
 import '../modules/calculation_methods/views/calculation_methods_view.dart';
 import '../modules/hadith/bindings/hadith_binding.dart';
 import '../modules/hadith/views/hadith_view.dart';
+import '../modules/hadith_book_detail/bindings/hadith_book_detail_binding.dart';
+import '../modules/hadith_book_detail/views/hadith_book_detail_view.dart';
 import '../modules/hijri_adjustment/bindings/hijri_adjustment_binding.dart';
 import '../modules/hijri_adjustment/views/hijri_adjustment_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -30,6 +32,8 @@ import '../modules/surah_detail/bindings/surah_detail_binding.dart';
 import '../modules/surah_detail/views/surah_detail_view.dart';
 import '../modules/tasbih/bindings/tasbih_binding.dart';
 import '../modules/tasbih/views/tasbih_view.dart';
+import '../modules/tasbih_counter/bindings/tasbih_counter_binding.dart';
+import '../modules/tasbih_counter/views/tasbih_counter_view.dart';
 import '../modules/time_adjustment/bindings/time_adjustment_binding.dart';
 import '../modules/time_adjustment/views/time_adjustment_view.dart';
 
@@ -120,6 +124,16 @@ class AppPages {
       name: _Paths.QURAN_SETTINGS,
       page: () => const QuranSettingsView(),
       binding: QuranSettingsBinding(),
+    ),
+    GetPage(
+      name: _Paths.HADITH_BOOK_DETAIL,
+      page: () => const HadithBookDetailView(),
+      binding: HadithBookDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.TASBIH_COUNTER,
+      page: () => const TasbihCounterView(),
+      binding: TasbihCounterBinding(),
     ),
   ];
 }

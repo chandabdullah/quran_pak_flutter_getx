@@ -88,8 +88,8 @@ class SurahDetailView extends GetView<SurahDetailController> {
                   color: Get.theme.primaryColor,
                 ),
               )
-            : SingleChildScrollView(
-                controller: controller.scrollController,
+            : Padding(
+                // physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(vertical: kSpacing),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -112,22 +112,26 @@ class SurahDetailView extends GetView<SurahDetailController> {
                           const Gap(10),
                         ],
                       ),
-                    ListView.separated(
-                      itemCount: controller.surahArabicAya.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      separatorBuilder: (BuildContext context, int index) {
-                        return Divider(
-                          color: Get.theme.splashColor,
-                        );
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        Verse arabicAya = controller.surahArabicAya[index];
-                        // var hideAya = surah.number == 1 && index == 0;
-                        return VerseContainer(
-                          verse: arabicAya,
-                        );
-                      },
+                    Expanded(
+                      child: ListView.separated(
+                        controller: controller.scrollController,
+                        itemCount: controller.surahArabicAya.length,
+                        // shrinkWrap: true,
+                        // physics: const NeverScrollableScrollPhysics(),
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Divider(
+                            color: Get.theme.splashColor,
+                          );
+                        },
+                        itemBuilder: (BuildContext context, int index) {
+                          Verse arabicAya = controller.surahArabicAya[index];
+                          // var hideAya = surah.number == 1 && index == 0;
+                          return VerseContainer(
+                            key: GlobalKey(),
+                            verse: arabicAya,
+                          );
+                        },
+                      ),
                     ),
                     const Divider(),
                     Padding(

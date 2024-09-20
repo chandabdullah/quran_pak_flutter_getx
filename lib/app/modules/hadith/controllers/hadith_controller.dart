@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
+import 'package:hadith/classes.dart';
+import 'package:hadith/hadith.dart';
 
 class HadithController extends GetxController {
-  //TODO: Implement HadithController
+  List<Collection> collections = getCollections();
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -18,6 +19,4 @@ class HadithController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

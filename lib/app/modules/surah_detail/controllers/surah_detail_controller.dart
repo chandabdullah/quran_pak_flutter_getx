@@ -13,57 +13,28 @@ class SurahDetailController extends GetxController {
   // Surah
   Surah? surah;
   List<Verse> surahArabicAya = [];
-  List<Verse> surahEnglishAya = [];
-
-  // Juz
-  String? englishJuz = Get.arguments['englishJuz'];
-  String? arabicJuz = Get.arguments['arabicJuz'];
-  List<JuzSurahVerses> juzSurahVerses = [];
-  // int juzVersesCount = 0;
-  List<Verse> juzVerses = [];
 
   getSurahDetail() async {
     isLoading = true;
     update();
 
-    // if (Get.arguments["type"] == 'juz') {
-    //   int juz = Get.arguments["juz"];
-    //   juzSurahVerses = Quran.getSurahVersesInJuzAsList(juz);
-    //   for (JuzSurahVerses surahJuz in juzSurahVerses ?? []) {
-    //     for (var verse in surahJuz.verses.entries) {
-    //       juzVerses.add(verse.value);
-    //     }
-    //     // juzVerses = juzVerses + surahJuz.verseCount;
-    //     // List<MapEntry<int, Verse>> surahVerses =
-    //     //     surahJuz.verses.entries.toList();
-
-    //     // for (MapEntry<int, Verse> verse in surahVerses) {
-    //     // }
-
-    //     if ((juzVerses.length) > 100) await 1.delay();
-    //   }
-    // } else {
     surah = Quran.getSurah(surahNumber);
     surahArabicAya = Quran.getSurahVersesAsList(surahNumber);
-    surahEnglishAya = Quran.getSurahVersesAsList(
-      surahNumber,
-      language: QuranLanguage.english,
-    );
-    if ((surah?.verseCount ?? 0) > 100) await 1.delay();
-    // }
+
+    if ((surah?.verseCount ?? 0) > 100) await .5.delay();
 
     isLoading = false;
     update();
 
-    await 1.delay();
+    // await 1.delay();
 
-    final double position = calculateScrollPosition(150);
+    // final double position = calculateScrollPosition(150);
 
-    scrollController.animateTo(
-      position,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
+    // scrollController.animateTo(
+    //   position,
+    //   duration: const Duration(milliseconds: 500),
+    //   curve: Curves.easeInOut,
+    // );
   }
 
   onPreviousSurah() {

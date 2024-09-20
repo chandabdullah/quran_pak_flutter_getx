@@ -19,6 +19,8 @@ abstract class Routes {
   static const TASBIH = _Paths.TASBIH;
   static const HADITH = _Paths.HADITH;
   static const QURAN_SETTINGS = _Paths.QURAN_SETTINGS;
+  static const HADITH_BOOK_DETAIL = _Paths.HADITH_BOOK_DETAIL;
+  static const TASBIH_COUNTER = _Paths.TASBIH_COUNTER;
 }
 
 abstract class _Paths {
@@ -39,4 +41,6 @@ abstract class _Paths {
   static const TASBIH = '/tasbih';
   static const HADITH = '/hadith';
   static const QURAN_SETTINGS = '/quran-settings';
+  static const HADITH_BOOK_DETAIL = '/hadith-book-detail';
+  static const TASBIH_COUNTER = '/tasbih-counter';
 }

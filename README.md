@@ -1,3 +1,5 @@
+`export PATH="$PATH":"$HOME/.pub-cache/bin"`
+
 ## Remaining
 
 - Change Language
