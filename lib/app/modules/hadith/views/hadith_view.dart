@@ -62,7 +62,11 @@ class HadithView extends GetView<HadithController> {
                 onTap: () {
                   Get.toNamed(
                     Routes.HADITH_BOOK_DETAIL,
-                    arguments: collection.name,
+                    arguments: {
+                      "name": collection.name,
+                      "engName": collection.collection.first.title,
+                      "arName": collection.collection.last.title,
+                    },
                   );
                 },
                 child: Container(

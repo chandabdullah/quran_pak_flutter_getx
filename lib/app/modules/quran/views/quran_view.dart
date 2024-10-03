@@ -34,6 +34,7 @@ class QuranView extends GetView<QuranController> {
               ),
               child: controller.showSearch
                   ? TextField(
+                      autofocus: true,
                       keyboardType: TextInputType.text,
                       controller: controller.searchController,
                       onChanged: controller.onInputChange,
@@ -123,6 +124,8 @@ class QuranView extends GetView<QuranController> {
             controller: controller.tabController,
             children: [
               ListView.separated(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 itemCount: controller.filteredSurah.length,
                 separatorBuilder: (BuildContext context, int index) {
                   return Divider(
@@ -143,7 +146,7 @@ class QuranView extends GetView<QuranController> {
                       Get.toNamed(
                         Routes.SURAH_DETAIL,
                         arguments: {
-                          "surah": index + 1,
+                          "surah": surahNumber,
                         },
                       );
                     },
@@ -172,6 +175,8 @@ class QuranView extends GetView<QuranController> {
                 },
               ),
               ListView.separated(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 itemCount: controller.filteredQuranJuz.length,
                 separatorBuilder: (BuildContext context, int index) {
                   return Divider(
@@ -190,7 +195,7 @@ class QuranView extends GetView<QuranController> {
                       Get.toNamed(
                         Routes.JUZ_DETAIL,
                         arguments: {
-                          "juz": index + 1,
+                          "juz": int.parse(juz["juz"]?.toString() ?? "1"),
                           "type": "juz",
                           "englishJuz": englishJuz,
                           "arabicJuz": arabicJuz,

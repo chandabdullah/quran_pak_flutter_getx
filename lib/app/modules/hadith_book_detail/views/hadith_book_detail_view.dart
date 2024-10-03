@@ -11,7 +11,7 @@ class HadithBookDetailView extends GetView<HadithBookDetailController> {
     return GetBuilder<HadithBookDetailController>(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(Get.arguments),
+          title: Text(Get.arguments["engName"]),
           centerTitle: true,
         ),
         body: const Center(
