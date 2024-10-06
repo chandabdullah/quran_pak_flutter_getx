@@ -4,6 +4,7 @@ import 'package:quran_pak/app/data/local_data/colors_list.dart';
 import 'package:quran_pak/app/models/app_color_model.dart';
 import 'package:quran_pak/app/modules/home/controllers/home_controller.dart';
 import 'package:quran_pak/config/theme/my_theme.dart';
+import 'package:quran_pak/config/translations/localization_service.dart';
 
 class SettingsController extends GetxController {
   AppColorModel get colorsList => MyTheme.getThemeIsLight
@@ -32,6 +33,11 @@ class SettingsController extends GetxController {
     return hijriAdjustment == 0
         ? "Auto"
         : "${hijriAdjustment > 0 ? "+$hijriAdjustment" : hijriAdjustment} days";
+  }
+
+  onLanguageChange(value) {
+    if (Get.isBottomSheetOpen ?? false) Get.back();
+    LocalizationService.updateLanguage(value);
   }
 
   @override

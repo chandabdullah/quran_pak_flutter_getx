@@ -24,7 +24,7 @@ showCustomBottomSheet(
         return Container(
           constraints: BoxConstraints(
             maxHeight: Get.height * .9,
-            minHeight: Get.height / 2,
+            minHeight: 0,
           ),
           padding: EdgeInsets.only(
             bottom: kBottomPadding(context),
@@ -35,13 +35,16 @@ showCustomBottomSheet(
             children: [
               Container(
                 alignment: centerTitle == true ? Alignment.center : null,
-                padding: const EdgeInsets.all(kPadding),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kPadding,
+                  vertical: kSpacing,
+                ),
                 child: title,
               ),
               const Divider(
                 height: 1,
               ),
-              const Gap(12),
+              // const Gap(12),
               content ?? const SizedBox(),
             ],
           ),

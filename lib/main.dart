@@ -52,7 +52,7 @@ void main() async {
           },
           initialRoute: PermissionHandlerService.initialPage(appPermissions),
           getPages: AppPages.routes,
-          // locale: MyLocale.getCurrentLocal(),
+          locale: MyLocale.getCurrentLocal(),
           translations: LocalizationService(),
         );
       },

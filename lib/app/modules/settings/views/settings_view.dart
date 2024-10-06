@@ -12,7 +12,10 @@ import 'package:quran_pak/app/data/local_data/colors_list.dart';
 import 'package:quran_pak/app/data/local/my_shared_pref.dart';
 import 'package:quran_pak/app/modules/home/controllers/home_controller.dart';
 import 'package:quran_pak/app/routes/app_pages.dart';
+import 'package:quran_pak/app/services/location_service.dart';
 import 'package:quran_pak/config/theme/my_theme.dart';
+import 'package:quran_pak/config/translations/localization_service.dart';
+import 'package:quran_pak/config/translations/strings_enum.dart';
 import 'package:quran_pak/utils/color_utils.dart';
 
 import '../controllers/settings_controller.dart';
@@ -24,7 +27,7 @@ class SettingsView extends GetView<SettingsController> {
     return GetBuilder<SettingsController>(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Settings'),
+          title: Text(Strings.Settings.tr),
           centerTitle: true,
         ),
         body: SafeArea(
@@ -34,7 +37,7 @@ class SettingsView extends GetView<SettingsController> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  "Calculation",
+                  Strings.Calculation.tr,
                   style: Get.textTheme.bodyMedium,
                 ),
                 const Gap(4),
@@ -52,12 +55,12 @@ class SettingsView extends GetView<SettingsController> {
                       children: [
                         CustomListTile(
                           icon: FlutterIslamicIcons.solidCommunity,
-                          title: "Islamic Madhhab",
+                          title: Strings.IslamicMadhhab.tr,
                           subtitleWidget: RichText(
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "Shia",
+                                  text: Strings.Shia.tr,
                                   style: Get.textTheme.bodyMedium?.copyWith(
                                     fontWeight:
                                         controller.getIslamicMadhabId == -1
@@ -70,7 +73,7 @@ class SettingsView extends GetView<SettingsController> {
                                   style: Get.textTheme.bodyMedium,
                                 ),
                                 TextSpan(
-                                  text: "Shafi",
+                                  text: Strings.Shafi.tr,
                                   style: Get.textTheme.bodyMedium?.copyWith(
                                     fontWeight:
                                         controller.getIslamicMadhabId == 0
@@ -83,7 +86,7 @@ class SettingsView extends GetView<SettingsController> {
                                   style: Get.textTheme.bodyMedium,
                                 ),
                                 TextSpan(
-                                  text: "Hanbali",
+                                  text: Strings.Hanbali.tr,
                                   style: Get.textTheme.bodyMedium?.copyWith(
                                     fontWeight:
                                         controller.getIslamicMadhabId == 1
@@ -103,7 +106,7 @@ class SettingsView extends GetView<SettingsController> {
                         const Divider(height: 1),
                         CustomListTile(
                           icon: Icons.calculate,
-                          title: "Calculation Method",
+                          title: Strings.CalculationMethod.tr,
                           subtitle: controller.getCalculationMethodName,
                           // iconColor: Colors.teal,
                           iconColor: Get.theme.primaryColor,
@@ -114,9 +117,10 @@ class SettingsView extends GetView<SettingsController> {
                         const Divider(height: 1),
                         CustomListTile(
                           icon: FlutterIslamicIcons.solidPrayingPerson,
-                          title: "Prayer Time Adjustment",
-                          subtitle:
-                              "The adjustment will be effective for daily prayer times",
+                          title: Strings.PrayerTimeAdjustment.tr,
+                          subtitle: Strings
+                              .TheAdjustmentWillBeEffectiveForDailyPrayerTimes
+                              .tr,
                           // iconColor: Colors.green,
                           iconColor: Get.theme.primaryColor,
                           onTap: () {
@@ -126,7 +130,7 @@ class SettingsView extends GetView<SettingsController> {
                         const Divider(height: 1),
                         CustomListTile(
                           icon: FlutterIslamicIcons.calendar,
-                          title: "Hijri Adjustment",
+                          title: Strings.HijriAdjustment.tr,
                           subtitle: controller.getHijriAdjustment(),
                           // iconColor: Colors.amber,
                           iconColor: Get.theme.primaryColor,
@@ -144,7 +148,7 @@ class SettingsView extends GetView<SettingsController> {
                 ),
                 const Gap(20),
                 Text(
-                  "Display",
+                  Strings.Display.tr,
                   style: Get.textTheme.bodyMedium,
                 ),
                 const Gap(4),
@@ -162,8 +166,8 @@ class SettingsView extends GetView<SettingsController> {
                       children: [
                         CustomSwitchListTile(
                           icon: Icons.access_time_filled,
-                          title: "Time Format",
-                          subtitle: "24 Format",
+                          title: Strings.TimeFormat.tr,
+                          subtitle: Strings.Format24.tr,
                           value: controller.currentTimeFormat,
                           iconColor: Get.theme.primaryColor,
                           onChange: controller.onTimeFormatChange,
@@ -175,9 +179,10 @@ class SettingsView extends GetView<SettingsController> {
                         const Divider(height: 1),
                         CustomSwitchListTile(
                           icon: Icons.dark_mode_rounded,
-                          title: "Dark Mode",
-                          subtitle:
-                              MyDarkMode.getThemeIsLight() ? "Light" : "Dark",
+                          title: Strings.DarkMode.tr,
+                          subtitle: MyDarkMode.getThemeIsLight()
+                              ? Strings.Light.tr
+                              : Strings.Dark.tr,
                           value: !MyDarkMode.getThemeIsLight(),
                           // iconColor: Colors.indigo,
                           iconColor: Get.theme.primaryColor,
@@ -188,11 +193,6 @@ class SettingsView extends GetView<SettingsController> {
                                 Get.find<HomeController>();
                             homeController.update();
                           },
-
-                          borderRadius: const BorderRadius.only(
-                            bottomRight: Radius.circular(kBorderRadius),
-                            bottomLeft: Radius.circular(kBorderRadius),
-                          ),
                           //  borderRadius: const BorderRadius.only(
                           //   topRight: Radius.circular(kBorderRadius),
                           //   topLeft: Radius.circular(kBorderRadius),
@@ -213,6 +213,66 @@ class SettingsView extends GetView<SettingsController> {
                         //     bottomLeft: Radius.circular(kBorderRadius),
                         //   ),
                         // ),
+                        const Divider(height: 1),
+                        CustomListTile(
+                          icon: Icons.language,
+                          title: Strings.Language.tr,
+                          subtitle:
+                              LocalizationService.getCurrentLanguageName(),
+                          // iconColor: Colors.teal,
+                          iconColor: Get.theme.primaryColor,
+                          onTap: () {
+                            showCustomBottomSheet(
+                              context,
+                              title: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        const Icon(Icons.language),
+                                        const Gap(10),
+                                        Text(
+                                          Strings.SelectLanguage.tr,
+                                          style: Get.textTheme.bodyLarge,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      if (Get.isBottomSheetOpen ?? false) {
+                                        Get.back();
+                                      }
+                                    },
+                                    icon: const Icon(Icons.close),
+                                  ),
+                                ],
+                              ),
+                              content: Column(
+                                children: [
+                                  for (var item in LocalizationService
+                                      .supportedLanguagesList.entries)
+                                    CheckboxListTile(
+                                      value: MyLocale.getCurrentLocal()
+                                              .languageCode ==
+                                          item.key,
+                                      onChanged: (val) {
+                                        controller.onLanguageChange(item.key);
+                                      },
+                                      title: Text(item.value),
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
+                          borderRadius: const BorderRadius.only(
+                            bottomRight: Radius.circular(kBorderRadius),
+                            bottomLeft: Radius.circular(kBorderRadius),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -230,7 +290,7 @@ class SettingsView extends GetView<SettingsController> {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
-                      "Version 1.45",
+                      Strings.Version.tr + " 1.45",
                       style: Get.textTheme.bodySmall,
                     ),
                     Icon(
@@ -239,7 +299,7 @@ class SettingsView extends GetView<SettingsController> {
                       color: Get.theme.disabledColor,
                     ),
                     Text(
-                      "Legal",
+                      Strings.Legal.tr,
                       style: Get.textTheme.bodySmall,
                     ),
                     Icon(
@@ -248,7 +308,7 @@ class SettingsView extends GetView<SettingsController> {
                       color: Get.theme.disabledColor,
                     ),
                     Text(
-                      "Website",
+                      Strings.Website.tr,
                       style: Get.textTheme.bodySmall,
                     ),
                   ],

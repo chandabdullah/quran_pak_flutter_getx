@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:quran_pak/app/constants/app_constants.dart';
+import 'package:quran_pak/config/translations/ur_PK/ur_pk_translation.dart';
 
 import '../../../app/data/local/my_shared_pref.dart';
 import 'ar_SA/ar_SA_translation.dart';
@@ -13,19 +16,26 @@ class LocalizationService extends Translations {
   // supported languages
   static Map<String, Locale> supportedLanguages = {
     'en': const Locale('en', 'US'),
+    'ur': const Locale('ur', 'PK'),
     'ar': const Locale('ar', 'SA'),
   };
 
-  // supported languages fonts family (must be in assets & pubspec yaml) or you can use google fonts
+  static Map<String, String> supportedLanguagesList = {
+    "en": "English",
+    "ur": "اردو",
+    "ar": "العربية",
+  };
+
   static Map<String, TextStyle> supportedLanguagesFontsFamilies = {
-    // todo add your English font families (add to assets/fonts, pubspec and name it here) default is poppins for english and cairo for arabic
-    'en': const TextStyle(fontFamily: 'Poppins'),
-    'ar': const TextStyle(fontFamily: 'notoSans'),
+    'en': TextStyle(fontFamily: GoogleFonts.dosis().fontFamily),
+    'ur': TextStyle(fontFamily: GoogleFonts.notoNastaliqUrdu().fontFamily),
+    'ar': TextStyle(fontFamily: arabicFont),
   };
 
   @override
   Map<String, Map<String, String>> get keys => {
         'en_US': enUs,
+        'ur_PK': urPK,
         'ar_SA': arSA,
       };
 
@@ -38,15 +48,19 @@ class LocalizationService extends Translations {
     // check if the language is supported
     if (!isLanguageSupported(languageCode)) return;
     // update current language in shared pref
-    // MySharedPref.setCurrentLanguage(languageCode); // TODO:
+    MyLocale.setCurrentLanguage(languageCode);
     await Get.updateLocale(supportedLanguages[languageCode]!);
   }
 
   /// check if the language is english
-  // TODO:
-  // static bool isItEnglish() =>
-  //     MySharedPref.getCurrentLocal().languageCode.toLowerCase().contains('en');
+  static bool isItEnglish() =>
+      MyLocale.getCurrentLocal().languageCode.toLowerCase().contains('en');
+
+  static String getCurrentLanguageName() {
+    String languageCode = MyLocale.getCurrentLocal().languageCode;
+    return supportedLanguagesList[languageCode] ?? "English";
+  }
 
   /// get current locale
-  // static Locale getCurrentLocal() => MySharedPref.getCurrentLocal(); // TODO:
+  static Locale getCurrentLocal() => MyLocale.getCurrentLocal();
 }

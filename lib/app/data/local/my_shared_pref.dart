@@ -12,6 +12,7 @@ import 'package:quran_pak/app/models/app_color_model.dart';
 import 'package:quran_pak/app/models/calculation_methods_model.dart';
 import 'package:quran_pak/app/models/islamic_madhhab_model.dart';
 import 'package:quran_pak/app/models/midnight_method_model.dart';
+import 'package:quran_pak/config/translations/localization_service.dart';
 import 'package:quran_pak/utils/color_utils.dart';
 
 part 'my_app_color.dart'; //? App Color
@@ -26,6 +27,7 @@ part 'my_hijri_adjustment.dart'; //? Hijri Adjustment
 part 'my_midnight_method.dart'; //? Midnight
 part 'my_font_size.dart'; //? Font Size
 part 'my_quran_translation.dart'; //? Quran Translation
+part 'my_locale.dart'; //? Locale
 
 class MySharedPref {
   // get storage
@@ -34,7 +36,6 @@ class MySharedPref {
   // STORING KEYS
   // static const String _tokenKey = 'token';
   // static const String _userKey = 'user_key';
-  // static const String _currentLocalKey = 'current_local';
   // static const String _lightThemeKey = 'is_theme_light';
 
   /// init get storage services
@@ -53,18 +54,4 @@ class MySharedPref {
   // static bool getThemeIsLight() =>
   //     _storage.read(_lightThemeKey) ??
   //     true; // todo set the default theme (true for light, false for dark)
-
-  // /// save current locale
-  // static void setCurrentLanguage(String languageCode) =>
-  //     _storage.write(_currentLocalKey, languageCode);
-
-  // /// get current locale
-  // static Locale getCurrentLocal() {
-  //   String? langCode = _storage.read(_currentLocalKey);
-  //   // default language is english
-  //   if (langCode == null) {
-  //     return LocalizationService.defaultLanguage;
-  //   }
-  //   return LocalizationService.supportedLanguages[langCode]!;
-  // }
 }

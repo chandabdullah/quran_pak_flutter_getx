@@ -43,7 +43,7 @@ Widget _getLoadingIndicator({String? msg}) {
           height: 10,
         ),
         Text(
-          msg ?? Strings.loading.tr,
+          msg ?? Strings.Loading.tr,
           style: Get.theme.textTheme.bodyLarge,
         ),
       ],
