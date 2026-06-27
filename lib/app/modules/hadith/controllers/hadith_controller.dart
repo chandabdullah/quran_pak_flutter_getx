@@ -1,22 +1,26 @@
 import 'package:get/get.dart';
-import 'package:hadith/classes.dart';
-import 'package:hadith/hadith.dart';
+import 'package:quran_pak/app/services/api_call_status.dart';
+import 'package:quran_pak/app/services/hadith_service.dart';
 
 class HadithController extends GetxController {
-  List<Collection> collections = getCollections();
+  List<HadithBook> books = [];
+  ApiCallStatus status = ApiCallStatus.loading;
 
   @override
   void onInit() {
     super.onInit();
+    loadBooks();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
+  Future<void> loadBooks() async {
+    status = ApiCallStatus.loading;
+    update();
+    try {
+      books = await HadithService.getBooks();
+      status = ApiCallStatus.success;
+    } catch (_) {
+      status = ApiCallStatus.error;
+    }
+    update();
   }
 }

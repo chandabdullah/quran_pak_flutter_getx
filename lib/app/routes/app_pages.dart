@@ -6,6 +6,12 @@ import '../modules/hadith/bindings/hadith_binding.dart';
 import '../modules/hadith/views/hadith_view.dart';
 import '../modules/hadith_book_detail/bindings/hadith_book_detail_binding.dart';
 import '../modules/hadith_book_detail/views/hadith_book_detail_view.dart';
+import '../modules/hadith_search/bindings/hadith_search_binding.dart';
+import '../modules/hadith_search/views/hadith_search_view.dart';
+import '../modules/bookmarks/bindings/bookmarks_binding.dart';
+import '../modules/bookmarks/views/bookmarks_view.dart';
+import '../modules/prayer_stats/bindings/prayer_stats_binding.dart';
+import '../modules/prayer_stats/views/prayer_stats_view.dart';
 import '../modules/hijri_adjustment/bindings/hijri_adjustment_binding.dart';
 import '../modules/hijri_adjustment/views/hijri_adjustment_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -129,6 +135,21 @@ class AppPages {
       name: _Paths.HADITH_BOOK_DETAIL,
       page: () => const HadithBookDetailView(),
       binding: HadithBookDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.HADITH_SEARCH,
+      page: () => const HadithSearchView(),
+      binding: HadithSearchBinding(),
+    ),
+    GetPage(
+      name: _Paths.BOOKMARKS,
+      page: () => const BookmarksView(),
+      binding: BookmarksBinding(),
+    ),
+    GetPage(
+      name: _Paths.PRAYER_STATS,
+      page: () => const PrayerStatsView(),
+      binding: PrayerStatsBinding(),
     ),
     GetPage(
       name: _Paths.TASBIH_COUNTER,

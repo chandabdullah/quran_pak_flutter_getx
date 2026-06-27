@@ -86,12 +86,11 @@ class QuranView extends GetView<QuranController> {
                 ),
                 onPressed: controller.onSearchClick,
               ),
-              // IconButton(
-              //   onPressed: () {
-              //     Get.toNamed(Routes.QURAN_SETTINGS);
-              //   },
-              //   icon: const Icon(Icons.settings),
-              // ),
+              IconButton(
+                tooltip: "Bookmarks",
+                onPressed: () => Get.toNamed(Routes.BOOKMARKS),
+                icon: const Icon(Icons.bookmark_border_rounded),
+              ),
               // IconButton(
               //   onPressed: controller.onSearchClick,
               //   icon: AnimatedIcon(

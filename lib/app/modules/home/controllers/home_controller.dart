@@ -1,13 +1,13 @@
 import 'package:adhan/adhan.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:location/location.dart';
 import 'package:quran_pak/app/data/local/my_shared_pref.dart';
 import 'package:quran_pak/app/services/connectivity_service.dart';
 import 'package:quran_pak/app/services/location_service.dart';
 import 'package:quran_pak/app/services/prayer_time_service.dart';
+import 'package:quran_pak/app/services/prayer_tracker_service.dart';
 import 'package:quran_pak/utils/date_time_utils.dart';
 import 'package:turn_page_transition/turn_page_transition.dart';
 // import 'package:intl/intl.dart';
@@ -19,17 +19,80 @@ class HomeController extends GetxController {
   bool isInternetAvailable = true;
   bool get isResumeReading => false;
 
+  /// The verse the user was last reading (drives the "Last Read" card).
+  QuranBookmark? get lastRead => MyBookmark.getLastRead();
+
+  // --- Daily prayer tracker (Hive-backed, per day) ---------------------------
+  static const List<String> trackerPrayers = PrayerTrackerService.prayers;
+
+  /// Today's completion state for the 5 obligatory prayers.
+  List<bool> get prayerTracker => PrayerTrackerService.getForDay(today);
+
+  int get completedToday => PrayerTrackerService.completedCount(today);
+
+  void togglePrayerTracker(int index) {
+    PrayerTrackerService.toggle(today, index);
+    update();
+  }
+
+  // --- Location / city -------------------------------------------------------
+  final GetStorage _box = GetStorage();
+  static const String _cityKey = 'home_city';
+
+  /// Human-readable city for which the prayer times are shown.
+  String? get city => _box.read(_cityKey);
+
+  Future<void> _resolveCity() async {
+    if (coordinates == null) return;
+    try {
+      final result = await LocationService.getCityFromLatLng(
+        coordinates!.latitude,
+        coordinates!.longitude,
+      );
+      final name = [result?.city, result?.country]
+          .where((e) => (e ?? '').isNotEmpty)
+          .join(', ');
+      if (name.isNotEmpty) {
+        _box.write(_cityKey, name);
+        update();
+      }
+    } catch (_) {}
+  }
+
   PrayerTimes? prayerTimes;
   PrayerTimes? nextPrayerTimes;
   SunnahTimes? sunnahTimes;
 
   DateTime get today => DateTime.now().toLocal();
-  DateTime? currentPrayerTime() => prayerTimes?.timeForPrayer(
-        prayerTimes!.currentPrayer(),
-      );
-  DateTime? nextPrayerTime() => prayerTimes?.timeForPrayer(
-        prayerTimes!.nextPrayer(),
-      );
+
+  /// Active obligatory prayer right now (never "none"); falls back to Fajr
+  /// before prayer times are loaded.
+  Prayer get currentPrayer => prayerTimes == null
+      ? Prayer.fajr
+      : PrayerTimeService.activePrayer(prayerTimes!);
+
+  /// Next prayer (never "none"); falls back to Fajr before times are loaded.
+  Prayer get upcomingPrayer => prayerTimes == null
+      ? Prayer.fajr
+      : PrayerTimeService.nextActivePrayer(prayerTimes!);
+
+  /// Display name for the current prayer, e.g. "Isha".
+  String get currentPrayerName => PrayerTimeService.prayerName(currentPrayer);
+
+  /// Display name for the next prayer, e.g. "Fajr".
+  String get upcomingPrayerName => PrayerTimeService.prayerName(upcomingPrayer);
+
+  DateTime? currentPrayerTime() => prayerTimes?.timeForPrayer(currentPrayer);
+
+  /// Time of the next prayer. After Isha this rolls over to tomorrow's Fajr,
+  /// computed from [nextPrayerTimes].
+  DateTime? nextPrayerTime() {
+    if (prayerTimes == null) return null;
+    if (prayerTimes!.nextPrayer() == Prayer.none) {
+      return nextPrayerTimes?.timeForPrayer(Prayer.fajr);
+    }
+    return prayerTimes!.timeForPrayer(upcomingPrayer);
+  }
 
   DateTime? savedDateTime = MyDateTime.getDateTime();
   Coordinates? coordinates = MyCoordinates.getCoordinates();
@@ -48,6 +111,7 @@ class HomeController extends GetxController {
     coordinates = Coordinates(location.latitude!, location.longitude!);
 
     update();
+    _resolveCity();
   }
 
   getPrayerTime() async {
@@ -113,6 +177,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (city == null) _resolveCity();
   }
 
   Future<void> checkLocationAndConnectivity() async {

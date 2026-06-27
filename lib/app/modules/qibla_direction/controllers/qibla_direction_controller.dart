@@ -1,58 +1,108 @@
-// import 'package:flutter_qiblah_update/flutter_qiblah.dart';
 import 'package:adhan/adhan.dart';
-import 'package:flutter_compass_v2/flutter_compass_v2.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:quran_pak/app/data/local/my_shared_pref.dart';
 
+/// High-level state of the Qibla screen, used to decide what to render.
+enum QiblaStatus {
+  loading,
+  serviceDisabled, // device location services are turned off
+  permissionDenied, // app lacks location permission (can re-request)
+  permissionDeniedForever, // user must enable it from app settings
+  ready, // we have coordinates and can show the compass
+}
+
 class QiblaDirectionController extends GetxController {
-  // final deviceSupport = FlutterQiblah.androidDeviceSensorSupport();
-  bool hasPermissions = false;
-  CompassEvent? lastRead;
-  DateTime? lastReadAt;
+  QiblaStatus status = QiblaStatus.loading;
   Qibla? qibla;
+  Coordinates? coordinates;
 
-  Coordinates? coordinates = MyCoordinates.getCoordinates();
-
-  // double? direction;
-  // double? distance;
-
-  void fetchPermissionStatus() {
-    Geolocator.checkPermission().then((status) {
-      hasPermissions = (status == LocationPermission.whileInUse ||
-          status == LocationPermission.always);
-      update();
-    });
+  @override
+  void onInit() {
+    super.onInit();
+    resolveLocation();
   }
 
-  getQiblaDirection() {
-    if (coordinates == null) return;
+  /// Checks location services + permission and, when available, fetches the
+  /// current position and computes the Qibla direction from it.
+  Future<void> resolveLocation() async {
+    status = QiblaStatus.loading;
+    update();
 
-    qibla = Qibla(coordinates!);
-    print("Qibla: ${qibla?.direction}");
+    // 1) Are the device's location services switched on?
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Fall back to a previously saved location if we have one so the user
+      // still sees a (best-effort) direction while services are off.
+      _useSavedCoordinatesIfAny();
+      if (status != QiblaStatus.ready) status = QiblaStatus.serviceDisabled;
+      update();
+      return;
+    }
 
-    // const coordinate = Coordinate(41.2995, 69.2401);
-    // direction = QiblaDirection.find(coordinate);
-    // distance = QiblaDirection.countDistance(coordinate);
+    // 2) Do we have permission?
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
 
+    if (permission == LocationPermission.deniedForever) {
+      _useSavedCoordinatesIfAny();
+      if (status != QiblaStatus.ready) {
+        status = QiblaStatus.permissionDeniedForever;
+      }
+      update();
+      return;
+    }
+
+    if (permission == LocationPermission.denied) {
+      _useSavedCoordinatesIfAny();
+      if (status != QiblaStatus.ready) status = QiblaStatus.permissionDenied;
+      update();
+      return;
+    }
+
+    // 3) Permission granted + services on → use the live position.
+    try {
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+      coordinates = Coordinates(position.latitude, position.longitude);
+      MyCoordinates.saveCoordinates(coordinates!);
+    } catch (_) {
+      // If the live read fails (e.g. timeout) fall back to saved coordinates.
+      _useSavedCoordinatesIfAny();
+    }
+
+    if (coordinates != null) {
+      qibla = Qibla(coordinates!);
+      status = QiblaStatus.ready;
+    } else if (status == QiblaStatus.loading) {
+      status = QiblaStatus.serviceDisabled;
+    }
     update();
   }
 
-  @override
-  void onInit() async {
-    fetchPermissionStatus();
-    getQiblaDirection();
-    super.onInit();
+  void _useSavedCoordinatesIfAny() {
+    final saved = MyCoordinates.getCoordinates();
+    if (saved != null && (saved.latitude != 0 || saved.longitude != 0)) {
+      coordinates = saved;
+      qibla = Qibla(saved);
+      status = QiblaStatus.ready;
+    }
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  /// Opens the device's location settings so the user can switch services on.
+  Future<void> openLocationSettings() async {
+    await Geolocator.openLocationSettings();
+    await resolveLocation();
   }
 
-  @override
-  void onClose() {
-//     FlutterQiblah().dispose();
-    super.onClose();
+  /// Opens the app's settings page (used when permission is denied forever).
+  Future<void> openAppSettings() async {
+    await Geolocator.openAppSettings();
+    await resolveLocation();
   }
 }

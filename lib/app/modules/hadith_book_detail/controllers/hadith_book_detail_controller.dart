@@ -1,43 +1,64 @@
+import 'dart:async';
+
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:hadith/classes.dart';
-import 'package:hadith/hadith.dart';
+import 'package:quran_pak/app/services/api_call_status.dart';
+import 'package:quran_pak/app/services/hadith_service.dart';
 
 class HadithBookDetailController extends GetxController {
-  // Collection collection = getCollection(Collections.bukhari);
+  final String bookId = (Get.arguments?["book"] ?? "bukhari").toString();
 
-  String name = Get.arguments["name"];
-  String engName = Get.arguments["engName"];
-  String arName = Get.arguments["arName"];
+  ApiCallStatus status = ApiCallStatus.loading;
+  HadithCollection? collection;
+  List<HadithItem> filtered = [];
+  String query = "";
+
+  final TextEditingController searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void onInit() {
-    print(Get.arguments);
-
-    switch (name) {
-      case 'abudawud':
-        break;
-      default:
-    }
-
-    List<Book> books = getBooks(Collections.bukhari);
-    Book book = books.first;
-    print(book.hadithEndNumber);
-    print(book.book.first.name);
-    // Book book = getBook(Collections.bukhari, 1);
-
-    Hadith hadith = getHadith(Collections.bukhari, 1, 1);
-    print(hadith.hadith.first.chapterTitle);
-    // collection = getCollection();
     super.onInit();
+    load();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  Future<void> load() async {
+    status = ApiCallStatus.loading;
+    update();
+    try {
+      collection = await HadithService.loadCollection(bookId);
+      filtered = collection!.hadiths;
+      status = filtered.isEmpty ? ApiCallStatus.empty : ApiCallStatus.success;
+    } catch (_) {
+      status = ApiCallStatus.error;
+    }
+    update();
   }
+
+  /// In-book search: by hadith number, section/book name, or any word/topic.
+  void onSearch(String value) {
+    query = value;
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 250), () {
+      if (collection == null) return;
+      filtered = HadithService.searchInCollection(collection!, value);
+      status = filtered.isEmpty ? ApiCallStatus.empty : ApiCallStatus.success;
+      update();
+    });
+  }
+
+  void clearSearch() {
+    searchController.clear();
+    onSearch("");
+  }
+
+  String sectionNameFor(HadithItem h) =>
+      collection?.sectionName(h.sectionNumber) ?? "";
 
   @override
   void onClose() {
+    _debounce?.cancel();
+    searchController.dispose();
     super.onClose();
   }
 }

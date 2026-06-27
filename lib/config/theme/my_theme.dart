@@ -13,7 +13,7 @@ class MyTheme {
 
     return ThemeData(
       // fontFamily: arabicFont,
-      fontFamily: GoogleFonts.dosis().fontFamily,
+      fontFamily: GoogleFonts.poppins().fontFamily,
 
       useMaterial3: true,
       // main color (app bar,tabs..etc)

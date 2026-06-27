@@ -28,6 +28,7 @@ part 'my_midnight_method.dart'; //? Midnight
 part 'my_font_size.dart'; //? Font Size
 part 'my_quran_translation.dart'; //? Quran Translation
 part 'my_locale.dart'; //? Locale
+part 'my_bookmark.dart'; //? Quran Bookmarks & Last Read
 
 class MySharedPref {
   // get storage

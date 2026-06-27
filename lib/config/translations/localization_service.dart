@@ -27,7 +27,7 @@ class LocalizationService extends Translations {
   };
 
   static Map<String, TextStyle> supportedLanguagesFontsFamilies = {
-    'en': TextStyle(fontFamily: GoogleFonts.dosis().fontFamily),
+    'en': TextStyle(fontFamily: GoogleFonts.poppins().fontFamily),
     'ur': TextStyle(fontFamily: GoogleFonts.notoNastaliqUrdu().fontFamily),
     'ar': TextStyle(fontFamily: arabicFont),
   };

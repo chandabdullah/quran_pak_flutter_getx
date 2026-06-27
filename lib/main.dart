@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
 import 'package:quran_pak/app/services/permissions_service.dart';
+import 'package:quran_pak/app/services/prayer_tracker_service.dart';
 import 'package:quran_pak/config/translations/localization_service.dart';
 
 import '/app/data/local/my_shared_pref.dart';
@@ -19,6 +20,9 @@ void main() async {
 
   // init shared preference
   await MySharedPref.init();
+
+  // init Hive (prayer tracker)
+  await PrayerTrackerService.init();
 
   AppPermissions appPermissions =
       await PermissionHandlerService.checkPermissionsForApplication();

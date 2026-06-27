@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../config/translations/strings_enum.dart';
+import '../constants/app_constants.dart';
 
 /// this method will show black overlay which look like dialog
 /// and it will have loading animation inside of it
@@ -32,7 +33,7 @@ Widget _getLoadingIndicator({String? msg}) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(kBorderRadius),
       color: Colors.white,
     ),
     child: Column(

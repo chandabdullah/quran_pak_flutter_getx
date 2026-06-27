@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:quran_pak/app/data/local/my_shared_pref.dart';
+import 'package:quran_pak/app/components/selectable_tile.dart';
+import 'package:quran_pak/app/constants/app_constants.dart';
 
 import '../controllers/calculation_methods_controller.dart';
 
@@ -15,26 +16,17 @@ class CalculationMethodsView extends GetView<CalculationMethodsController> {
           title: const Text("Calculation Methods"),
         ),
         body: SafeArea(
-          child: ListView.separated(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(kPadding),
             itemCount: controller.calculationMethods.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
               var method = controller.calculationMethods[index];
 
-              return ListTile(
-                onTap: () {
-                  controller.onCalculationMethodChange(method.id);
-                },
-                trailing: controller.calculationMethodId == method.id
-                    ? Icon(
-                        Icons.check,
-                        color: Get.theme.primaryColor,
-                      )
-                    : const SizedBox(),
-                title: Text(method.name),
-                subtitle: method.params?.midnight == null
-                    ? null
-                    : Text(method.params?.midnight ?? ""),
+              return SelectableTile(
+                title: method.name,
+                subtitle: method.params?.midnight,
+                selected: controller.calculationMethodId == method.id,
+                onTap: () => controller.onCalculationMethodChange(method.id),
               );
             },
           ),

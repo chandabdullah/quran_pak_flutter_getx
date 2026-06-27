@@ -1,4 +1,5 @@
 import 'package:adhan/adhan.dart';
+import 'package:get/get.dart';
 import '/app/data/local/my_shared_pref.dart';
 import '/app/data/local_data/midnight_methods.dart';
 import 'package:intl/intl.dart';
@@ -96,14 +97,48 @@ class PrayerTimeService {
     return params;
   }
 
+  /// Resolves the active obligatory prayer, never returning [Prayer.none].
+  ///
+  /// adhan's [PrayerTimes.currentPrayer] returns [Prayer.none] overnight
+  /// (after midnight, before fajr) because no prayer has started yet for the
+  /// new day — at that point Isha (from the previous evening) is still the
+  /// prayer in effect. During the post-sunrise gap there is no obligatory
+  /// prayer, so we surface the upcoming Dhuhr instead.
+  static Prayer activePrayer(PrayerTimes prayerTimes) {
+    final current = prayerTimes.currentPrayer();
+    switch (current) {
+      case Prayer.none:
+        return Prayer.isha;
+      case Prayer.sunrise:
+        return Prayer.dhuhr;
+      default:
+        return current;
+    }
+  }
+
+  /// Resolves the next prayer, never returning [Prayer.none].
+  ///
+  /// After Isha, adhan's [PrayerTimes.nextPrayer] returns [Prayer.none] since
+  /// there is no further prayer today — the next one is tomorrow's Fajr.
+  static Prayer nextActivePrayer(PrayerTimes prayerTimes) {
+    final next = prayerTimes.nextPrayer();
+    return next == Prayer.none ? Prayer.fajr : next;
+  }
+
+  /// Human-friendly name for a [Prayer], e.g. `Prayer.fajr` -> "Fajr".
+  static String prayerName(Prayer prayer) =>
+      prayer == Prayer.none ? '' : (prayer.name.capitalizeFirst ?? prayer.name);
+
   static bool isCurrentPrayer({
     required String prayerName,
     PrayerTimes? prayerTimes,
     DateTime? selectedDate,
   }) {
-    return DateFormat('dd MMM yyyy').format(selectedDate ?? DateTime.now()) !=
-            DateFormat('dd MMM yyyy').format(DateTime.now())
-        ? false
-        : prayerTimes?.currentPrayer().name == prayerName;
+    if (prayerTimes == null) return false;
+    final isToday =
+        DateFormat('dd MMM yyyy').format(selectedDate ?? DateTime.now()) ==
+            DateFormat('dd MMM yyyy').format(DateTime.now());
+    if (!isToday) return false;
+    return activePrayer(prayerTimes).name == prayerName;
   }
 }
