@@ -112,7 +112,8 @@ class BookmarksView extends GetView<BookmarksController> {
         subtitle: Text("Surah ${b.surah} · Verse ${b.verse}",
             style: Get.textTheme.bodySmall),
         trailing: IconButton(
-          icon: Icon(Icons.delete_outline_rounded, color: Get.theme.hintColor),
+          tooltip: "Remove from favourites",
+          icon: Icon(Icons.favorite_rounded, color: Get.theme.primaryColor),
           onPressed: () => controller.removeVerse(b),
         ),
       ),
@@ -158,7 +159,8 @@ class BookmarksView extends GetView<BookmarksController> {
             overflow: TextOverflow.ellipsis,
             style: Get.textTheme.bodySmall),
         trailing: IconButton(
-          icon: Icon(Icons.delete_outline_rounded, color: Get.theme.hintColor),
+          tooltip: "Remove from favourites",
+          icon: Icon(Icons.favorite_rounded, color: Get.theme.primaryColor),
           onPressed: () => controller.removeDua(dua.id),
         ),
       ),
