@@ -24,6 +24,7 @@ abstract class Routes {
   static const BOOKMARKS = _Paths.BOOKMARKS;
   static const PRAYER_STATS = _Paths.PRAYER_STATS;
   static const DUA = _Paths.DUA;
+  static const NOTIFICATION_PERMISSION = _Paths.NOTIFICATION_PERMISSION;
   static const TASBIH_COUNTER = _Paths.TASBIH_COUNTER;
 }
 
@@ -50,5 +51,6 @@ abstract class _Paths {
   static const BOOKMARKS = '/bookmarks';
   static const PRAYER_STATS = '/prayer-stats';
   static const DUA = '/dua';
+  static const NOTIFICATION_PERMISSION = '/notification-permission';
   static const TASBIH_COUNTER = '/tasbih-counter';
 }

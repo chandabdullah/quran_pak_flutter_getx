@@ -266,14 +266,32 @@ class PrayerTimeView extends GetView<PrayerTimeController> {
     final bool tracked = trackerIndex != null &&
         PrayerTrackerService.getForDay(controller.selectedDate)[trackerIndex];
 
+    // Background: current prayer is solid; a completed prayer gets a soft
+    // primary tint; otherwise the plain card colour.
+    final Color bg = isCurrentPrayer
+        ? theme.primaryColor
+        : (tracked
+            ? theme.primaryColor.withValues(alpha: .2)
+            : theme.cardColor);
+
+    void toggleComplete() {
+      if (trackerIndex == null) return;
+      PrayerTrackerService.toggle(controller.selectedDate, trackerIndex);
+      controller.update();
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().update();
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: kSpacing),
-      padding: const EdgeInsets.symmetric(horizontal: kPadding, vertical: 14),
       decoration: BoxDecoration(
-        color: isCurrentPrayer ? theme.primaryColor : theme.cardColor,
+        color: bg,
         borderRadius: BorderRadius.circular(kBorderRadius),
         border: Border.all(
-          color: isCurrentPrayer ? theme.primaryColor : theme.splashColor,
+          color: isCurrentPrayer
+              ? theme.primaryColor
+              : (tracked ? theme.primaryColor : theme.splashColor),
         ),
         boxShadow: isCurrentPrayer
             ? [
@@ -285,80 +303,93 @@ class PrayerTimeView extends GetView<PrayerTimeController> {
               ]
             : null,
       ),
-      child: Row(
-        children: [
-          // Leading completion checkmark (tap to mark the prayer done).
-          if (trackerIndex != null)
-            InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () {
-                PrayerTrackerService.toggle(
-                    controller.selectedDate, trackerIndex);
-                controller.update();
-                if (Get.isRegistered<HomeController>()) {
-                  Get.find<HomeController>().update();
-                }
-              },
-              child: Icon(
-                tracked
-                    ? Icons.check_circle_rounded
-                    : Icons.radio_button_unchecked_rounded,
-                color: isCurrentPrayer
-                    ? Colors.white
-                    : (tracked ? theme.primaryColor : theme.hintColor),
-                size: 22.sp,
-              ),
-            )
-          else
-            SizedBox(width: 22.sp),
-          SizedBox(width: 12.w),
-          Icon(
-            returnIconAccordingToPrayer(prayerName, prayerName: prayerName),
-            color: isCurrentPrayer ? Colors.white : theme.primaryColor,
-            size: 22.sp,
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Text(
-              prayerName.capitalize ?? "",
-              style: Get.textTheme.titleMedium!.copyWith(
-                color: isCurrentPrayer ? Colors.white : null,
-                fontWeight:
-                    isCurrentPrayer ? FontWeight.bold : FontWeight.w500,
-                fontSize: 16.sp,
-              ),
+      clipBehavior: Clip.antiAlias,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          // Tapping the tile marks/unmarks the prayer as completed.
+          onTap: trackerIndex == null ? null : toggleComplete,
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: kPadding, vertical: 14),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(
+                        returnIconAccordingToPrayer(prayerName,
+                            prayerName: prayerName),
+                        color:
+                            isCurrentPrayer ? Colors.white : theme.primaryColor,
+                        size: 22.sp,
+                      ),
+                      SizedBox(width: 12.w),
+                      Flexible(
+                        child: Text(
+                          prayerName.capitalize ?? "",
+                          overflow: TextOverflow.ellipsis,
+                          style: Get.textTheme.titleMedium!.copyWith(
+                            color: isCurrentPrayer ? Colors.white : null,
+                            fontWeight: isCurrentPrayer
+                                ? FontWeight.bold
+                                : FontWeight.w500,
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                      ),
+                      // Tick shown after the name when the prayer is completed.
+                      if (tracked) ...[
+                        SizedBox(width: 6.w),
+                        Icon(
+                          Icons.check_circle_rounded,
+                          color: isCurrentPrayer
+                              ? Colors.white
+                              : theme.primaryColor,
+                          size: 18.sp,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  prayerTime == DateTime(2000)
+                      ? "__:__"
+                      : prayerTime.toLocalDateFormat(),
+                  style: Get.textTheme.titleMedium!.copyWith(
+                    color: isCurrentPrayer ? Colors.white : fg,
+                    fontSize: 16.sp,
+                    fontWeight:
+                        isCurrentPrayer ? FontWeight.bold : FontWeight.w600,
+                  ),
+                ),
+                // Trailing reminder bell (per-prayer notification toggle).
+                if (trackerIndex != null) ...[
+                  SizedBox(width: 8.w),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => _onBellTap(trackerIndex),
+                    child: Padding(
+                      padding: const EdgeInsets.all(2),
+                      child: Icon(
+                        controller.isNotifEnabled(trackerIndex)
+                            ? Icons.notifications_active_rounded
+                            : Icons.notifications_off_outlined,
+                        color: isCurrentPrayer
+                            ? Colors.white
+                            : (controller.isNotifEnabled(trackerIndex)
+                                ? theme.primaryColor
+                                : theme.hintColor),
+                        size: 20.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-          Text(
-            prayerTime == DateTime(2000)
-                ? "__:__"
-                : prayerTime.toLocalDateFormat(),
-            style: Get.textTheme.titleMedium!.copyWith(
-              color: isCurrentPrayer ? Colors.white : fg,
-              fontSize: 16.sp,
-              fontWeight: isCurrentPrayer ? FontWeight.bold : FontWeight.w600,
-            ),
-          ),
-          // Trailing reminder bell (enable/disable notification for this prayer).
-          if (trackerIndex != null) ...[
-            SizedBox(width: 8.w),
-            InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () => _onBellTap(trackerIndex),
-              child: Icon(
-                controller.isNotifEnabled(trackerIndex)
-                    ? Icons.notifications_active_rounded
-                    : Icons.notifications_off_outlined,
-                color: isCurrentPrayer
-                    ? Colors.white
-                    : (controller.isNotifEnabled(trackerIndex)
-                        ? theme.primaryColor
-                        : theme.hintColor),
-                size: 20.sp,
-              ),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }
@@ -386,8 +417,8 @@ class PrayerTimeView extends GetView<PrayerTimeController> {
                     style: Get.textTheme.titleSmall),
                 Text(
                   "Then turn reminders on for each prayer below.",
-                  style: Get.textTheme.bodySmall
-                      ?.copyWith(color: theme.hintColor),
+                  style:
+                      Get.textTheme.bodySmall?.copyWith(color: theme.hintColor),
                 ),
               ],
             ),

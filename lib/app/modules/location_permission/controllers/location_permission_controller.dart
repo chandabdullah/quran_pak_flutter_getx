@@ -1,29 +1,23 @@
 import 'package:get/get.dart';
-import '/app/services/permissions_service.dart';
+import 'package:quran_pak/app/routes/app_pages.dart';
+import 'package:quran_pak/app/services/permissions_service.dart';
 
 class LocationPermissionController extends GetxController {
-  onEnablePermissions() async {
-    bool isEnabled = await PermissionHandlerService.requestLocationPermission();
-    if (isEnabled) {
-      AppPermissions appPermissions =
-          await PermissionHandlerService.checkPermissionsForApplication();
+  bool requesting = false;
 
-      PermissionHandlerService.goToPermissionPage(appPermissions);
-    }
+  Future<void> onEnablePermissions() async {
+    requesting = true;
+    update();
+    await PermissionHandlerService.requestLocationPermission();
+    requesting = false;
+    update();
+    _goToNotificationStep();
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
+  void skip() => _goToNotificationStep();
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
+  /// Onboarding step 2: ask about notifications.
+  void _goToNotificationStep() {
+    Get.offNamed(Routes.NOTIFICATION_PERMISSION);
   }
 }

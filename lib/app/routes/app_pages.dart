@@ -14,6 +14,7 @@ import '../modules/prayer_stats/bindings/prayer_stats_binding.dart';
 import '../modules/prayer_stats/views/prayer_stats_view.dart';
 import '../modules/dua/bindings/dua_binding.dart';
 import '../modules/dua/views/dua_view.dart';
+import '../modules/notification_permission/views/notification_permission_view.dart';
 import '../modules/hijri_adjustment/bindings/hijri_adjustment_binding.dart';
 import '../modules/hijri_adjustment/views/hijri_adjustment_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -157,6 +158,10 @@ class AppPages {
       name: _Paths.DUA,
       page: () => const DuaView(),
       binding: DuaBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIFICATION_PERMISSION,
+      page: () => const NotificationPermissionView(onboarding: true),
     ),
     GetPage(
       name: _Paths.TASBIH_COUNTER,

@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
-import 'package:quran_pak/app/services/permissions_service.dart';
 import 'package:quran_pak/app/services/prayer_tracker_service.dart';
 import 'package:quran_pak/app/services/notification_service.dart';
+import 'package:quran_pak/app/services/onboarding_service.dart';
 import 'package:quran_pak/config/translations/localization_service.dart';
 
 import '/app/data/local/my_shared_pref.dart';
@@ -28,9 +28,11 @@ void main() async {
   // init local notifications (prayer reminders)
   await NotificationService.init();
 
-  AppPermissions appPermissions =
-      await PermissionHandlerService.checkPermissionsForApplication();
   await Quran.initialize();
+
+  // Show the permission onboarding only on first launch; afterwards go home.
+  final String initialRoute =
+      OnboardingService.isDone ? AppPages.INITIAL : Routes.LOCATION_PERMISSION;
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -61,7 +63,7 @@ void main() async {
               ),
             );
           },
-          initialRoute: PermissionHandlerService.initialPage(appPermissions),
+          initialRoute: initialRoute,
           getPages: AppPages.routes,
           locale: MyLocale.getCurrentLocal(),
           translations: LocalizationService(),

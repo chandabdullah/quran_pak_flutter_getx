@@ -1,155 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
-import '/app/constants/app_constants.dart';
+import 'package:quran_pak/app/components/permission_scaffold.dart';
 
 import '../controllers/location_permission_controller.dart';
 
 class LocationPermissionView extends GetView<LocationPermissionController> {
   const LocationPermissionView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    var theme = Get.theme;
-    return Scaffold(
-      backgroundColor: Get.theme.primaryColor,
-      appBar: AppBar(
-        backgroundColor: Get.theme.primaryColor,
-        toolbarHeight: 0,
-      ),
-      body: SafeArea(
-        child: Container(
-          width: Get.width,
-          height: Get.height,
-          padding: const EdgeInsets.all(kPadding),
-          child: Column(
-            children: [
-              SizedBox(
-                width: Get.width,
-                height: Get.height / 2,
-                child: Stack(
-                  children: [
-                    const Center(
-                      child: Icon(
-                        Icons.location_on_rounded,
-                        size: 150,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Positioned(
-                      top: 50,
-                      left: 50,
-                      child: Icon(
-                        Icons.circle_outlined,
-                        size: 30,
-                        color: Colors.white.withOpacity(.5),
-                      ),
-                    ),
-                    Positioned(
-                      right: 4,
-                      bottom: 100,
-                      child: Icon(
-                        Icons.location_on_outlined,
-                        size: 30,
-                        color: Colors.white.withOpacity(.5),
-                      ),
-                    ),
-                    Positioned(
-                      left: 40,
-                      bottom: 100,
-                      child: Icon(
-                        Icons.circle_outlined,
-                        size: 20,
-                        color: Colors.white.withOpacity(.5),
-                      ),
-                    ),
-                    Positioned(
-                      top: 40,
-                      bottom: 100,
-                      right: 50,
-                      child: Icon(
-                        Icons.circle_outlined,
-                        size: 20,
-                        color: Colors.white.withOpacity(.5),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 40,
-                      left: 50,
-                      right: 50,
-                      child: Icon(
-                        Icons.circle_outlined,
-                        size: 20,
-                        color: Colors.white.withOpacity(.5),
-                      ),
-                    ),
-                    Positioned(
-                      top: 40,
-                      left: 100,
-                      right: 50,
-                      child: Icon(
-                        Icons.location_on_outlined,
-                        size: 20,
-                        color: Colors.white.withOpacity(.5),
-                      ),
-                    ),
-                    Positioned(
-                      top: 40,
-                      left: 40,
-                      bottom: 50,
-                      child: Icon(
-                        Icons.location_on_outlined,
-                        size: 20,
-                        color: Colors.white.withOpacity(.5),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Gap(30),
-                    Text(
-                      "Enable Location",
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      "To provide near by drivers to your location please grant permission for the application to access your device s geo location",
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                    // const Gap(20),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        padding: WidgetStateProperty.all(
-                          const EdgeInsets.symmetric(
-                            horizontal: kPadding,
-                          ),
-                        ),
-                        backgroundColor: WidgetStateProperty.all(
-                          Colors.white,
-                        ),
-                        foregroundColor: WidgetStateProperty.all(
-                          Get.theme.primaryColor,
-                        ),
-                      ),
-                      onPressed: controller.onEnablePermissions,
-                      child: const Text("Enable Now"),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    return GetBuilder<LocationPermissionController>(builder: (_) {
+      return PermissionScaffold(
+        icon: Icons.location_on_rounded,
+        step: 1,
+        totalSteps: 2,
+        title: "Enable Location",
+        message:
+            "We use your location to calculate accurate prayer times and the "
+            "Qibla direction for exactly where you are.",
+        primaryLabel: "Enable Location",
+        primaryLoading: controller.requesting,
+        onPrimary: controller.requesting ? null : controller.onEnablePermissions,
+        secondaryLabel: "Skip for now",
+        onSecondary: controller.skip,
+        bullets: const [
+          (Icons.access_time_filled_rounded, "Precise daily prayer times"),
+          (Icons.explore_rounded, "Accurate Qibla direction"),
+          (Icons.lock_outline_rounded, "Stays on your device"),
+        ],
+      );
+    });
   }
 }

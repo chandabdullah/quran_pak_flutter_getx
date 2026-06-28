@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
+import 'package:quran_pak/app/components/permission_scaffold.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
+import 'package:quran_pak/app/routes/app_pages.dart';
 import 'package:quran_pak/app/services/notification_service.dart';
+import 'package:quran_pak/app/services/onboarding_service.dart';
 
-/// Asks the user to grant notification permission so prayer reminders can fire.
-/// Pops `true` once notifications are allowed.
+/// Asks for notification permission. Used both as the second onboarding step
+/// ([onboarding] == true, with a "Maybe later" skip) and from the Prayer Time
+/// screen ([onboarding] == false, pops with the result).
 class NotificationPermissionView extends StatefulWidget {
-  const NotificationPermissionView({super.key});
+  const NotificationPermissionView({super.key, this.onboarding = false});
+
+  final bool onboarding;
 
   @override
   State<NotificationPermissionView> createState() =>
@@ -23,7 +28,10 @@ class _NotificationPermissionViewState
     setState(() => _requesting = true);
     final granted = await NotificationService.requestPermission();
     setState(() => _requesting = false);
-    if (granted) {
+
+    if (widget.onboarding) {
+      _finishOnboarding();
+    } else if (granted) {
       Get.back(result: true);
     } else {
       Get.rawSnackbar(
@@ -36,61 +44,31 @@ class _NotificationPermissionViewState
     }
   }
 
+  void _finishOnboarding() {
+    OnboardingService.markDone();
+    Get.offAllNamed(Routes.HOME);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final primary = Get.theme.primaryColor;
-    return Scaffold(
-      appBar: AppBar(title: const Text("Prayer Reminders")),
-      body: Padding(
-        padding: const EdgeInsets.all(kPadding * 1.5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(28),
-              decoration: BoxDecoration(
-                color: primary.withValues(alpha: .12),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.notifications_active_rounded,
-                  size: 64, color: primary),
-            ),
-            const Gap(24),
-            Text(
-              "Never miss a prayer",
-              style: Get.textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
-            const Gap(12),
-            Text(
-              "Allow notifications so we can remind you at each prayer time. "
-              "You can then turn the reminder on or off for each prayer.",
-              textAlign: TextAlign.center,
-              style: Get.textTheme.bodyMedium?.copyWith(color: Get.theme.hintColor),
-            ),
-            const Gap(28),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                onPressed: _requesting ? null : _enable,
-                icon: _requesting
-                    ? const SizedBox(
-                        height: 18,
-                        width: 18,
-                        child: CircularProgressIndicator(
-                            strokeWidth: 2, color: Colors.white))
-                    : const Icon(Icons.notifications_active_rounded),
-                label: const Text("Enable Notifications"),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return PermissionScaffold(
+      icon: Icons.notifications_active_rounded,
+      step: widget.onboarding ? 2 : null,
+      totalSteps: 2,
+      title: "Never miss a prayer",
+      message:
+          "Allow notifications and we'll remind you the moment each prayer "
+          "begins. You can turn the reminder on or off for any prayer later.",
+      primaryLabel: "Enable Notifications",
+      primaryLoading: _requesting,
+      onPrimary: _requesting ? null : _enable,
+      secondaryLabel: widget.onboarding ? "Maybe later" : "Not now",
+      onSecondary: widget.onboarding ? _finishOnboarding : () => Get.back(),
+      bullets: const [
+        (Icons.access_time_rounded, "Right on time, every day"),
+        (Icons.tune_rounded, "Choose which prayers remind you"),
+        (Icons.notifications_off_rounded, "Turn off anytime"),
+      ],
     );
   }
 }

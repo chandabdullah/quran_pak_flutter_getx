@@ -72,31 +72,45 @@ class SurahDetailView extends GetView<SurahDetailController> {
                       ),
                     ),
                   ),
-                  const Divider(height: 1),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: kPadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomTextButton(
-                          text: "Previous Surah",
-                          onPress: controller.surahNumber <= 1
-                              ? null
-                              : controller.onPreviousSurah,
-                        ),
-                        CustomTextButton(
-                          text: "Next Surah",
-                          onPress: controller.surahNumber >= 114
-                              ? null
-                              : controller.onNextSurah,
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
+        bottomNavigationBar:
+            controller.isLoading ? null : _bottomNavBar(),
       );
     });
+  }
+
+  Widget _bottomNavBar() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Get.theme.cardColor,
+        border: Border(top: BorderSide(color: Get.theme.splashColor)),
+      ),
+      child: SafeArea(
+        top: false,
+        minimum: const EdgeInsets.only(bottom: 8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kPadding, vertical: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomTextButton(
+                text: "Previous Surah",
+                onPress: controller.surahNumber <= 1
+                    ? null
+                    : controller.onPreviousSurah,
+              ),
+              CustomTextButton(
+                text: "Next Surah",
+                onPress: controller.surahNumber >= 114
+                    ? null
+                    : controller.onNextSurah,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _surahHeader() {
