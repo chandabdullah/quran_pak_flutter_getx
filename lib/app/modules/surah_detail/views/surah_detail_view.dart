@@ -39,9 +39,9 @@ class SurahDetailView extends GetView<SurahDetailController> {
           centerTitle: true,
           actions: [
             IconButton(
-              tooltip: "Bookmarks",
+              tooltip: "Favourites & bookmark",
               onPressed: () => Get.toNamed(Routes.BOOKMARKS),
-              icon: const Icon(Icons.bookmarks_outlined),
+              icon: const Icon(Icons.favorite_border_rounded),
             ),
             IconButton(
               onPressed: () => Get.toNamed(Routes.QURAN_SETTINGS),

@@ -3,7 +3,7 @@ part of 'my_shared_pref.dart';
 enum AppTheme {
   Light,
   Dark,
-  // System,
+  System,
 }
 
 class MyDarkMode {
@@ -41,13 +41,11 @@ class MyDarkMode {
       case AppTheme.Dark:
         isLightTheme = false;
         break;
-      // case AppTheme.SystemDefault:
-      //   isLightTheme =
-      //       SchedulerBinding.instance.platformDispatcher.platformBrightness ==
-      //               Brightness.dark
-      //           ? false
-      //           : true;
-      //   break;
+      case AppTheme.System:
+        isLightTheme = WidgetsBinding
+                .instance.platformDispatcher.platformBrightness ==
+            Brightness.light;
+        break;
     }
 
     return isLightTheme;

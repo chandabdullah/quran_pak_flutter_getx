@@ -3,7 +3,8 @@ import 'package:quran_pak/app/data/local/my_shared_pref.dart';
 import 'package:quran_pak/app/routes/app_pages.dart';
 
 class BookmarksController extends GetxController {
-  List<QuranBookmark> bookmarks = [];
+  List<QuranBookmark> savedVerses = [];
+  ContinueMark? continueMark;
 
   @override
   void onInit() {
@@ -12,20 +13,21 @@ class BookmarksController extends GetxController {
   }
 
   void refreshBookmarks() {
-    bookmarks = MyBookmark.getBookmarks();
+    savedVerses = MyBookmark.getSavedVerses();
+    continueMark = MyBookmark.getContinue();
     update();
   }
 
-  /// Opens the surah at the bookmarked verse (auto-scrolls there).
-  void openBookmark(QuranBookmark bookmark) {
+  /// Opens a surah at the given verse (auto-scrolls there).
+  void open(int surah, int verse) {
     Get.toNamed(
       Routes.SURAH_DETAIL,
-      arguments: {"surah": bookmark.surah, "verse": bookmark.verse},
+      arguments: {"surah": surah, "verse": verse},
     );
   }
 
   void remove(QuranBookmark bookmark) {
-    MyBookmark.removeBookmark(bookmark.surah, bookmark.verse);
+    MyBookmark.removeSavedVerse(bookmark.surah, bookmark.verse);
     refreshBookmarks();
   }
 }

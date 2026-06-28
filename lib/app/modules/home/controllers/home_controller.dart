@@ -6,6 +6,7 @@ import 'package:location/location.dart';
 import 'package:quran_pak/app/data/local/my_shared_pref.dart';
 import 'package:quran_pak/app/services/connectivity_service.dart';
 import 'package:quran_pak/app/services/location_service.dart';
+import 'package:quran_pak/app/services/notification_service.dart';
 import 'package:quran_pak/app/services/prayer_time_service.dart';
 import 'package:quran_pak/app/services/prayer_tracker_service.dart';
 import 'package:quran_pak/utils/date_time_utils.dart';
@@ -19,8 +20,8 @@ class HomeController extends GetxController {
   bool isInternetAvailable = true;
   bool get isResumeReading => false;
 
-  /// The verse the user was last reading (drives the "Last Read" card).
-  QuranBookmark? get lastRead => MyBookmark.getLastRead();
+  /// The continue-reading position (drives the "Continue Reading" card).
+  ContinueMark? get lastRead => MyBookmark.getContinue();
 
   // --- Daily prayer tracker (Hive-backed, per day) ---------------------------
   static const List<String> trackerPrayers = PrayerTrackerService.prayers;
@@ -133,6 +134,9 @@ class HomeController extends GetxController {
     if (prayerTimes != null) sunnahTimes = SunnahTimes(prayerTimes!);
 
     MyDateTime.saveDateTime(DateTime.now().toLocal());
+
+    // Refresh the 30-day reminder window with the latest computed times.
+    NotificationService.rescheduleAll();
   }
 
   // getPrayerTime() {

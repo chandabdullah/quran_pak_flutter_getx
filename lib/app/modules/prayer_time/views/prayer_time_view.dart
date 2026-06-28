@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_calendar/flutter_advanced_calendar.dart';
 
@@ -6,6 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:gap/gap.dart';
 import 'package:quran_pak/app/components/my_widgets_animator.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
+import 'package:quran_pak/app/modules/home/controllers/home_controller.dart';
+import 'package:quran_pak/app/modules/notification_permission/views/notification_permission_view.dart';
+import 'package:quran_pak/app/services/notification_service.dart';
 import 'package:quran_pak/app/services/payer_name_and_icon.dart';
 import 'package:quran_pak/app/services/prayer_time_service.dart';
 import 'package:quran_pak/app/services/prayer_tracker_service.dart';
@@ -43,19 +47,17 @@ class PrayerTimeView extends GetView<PrayerTimeController> {
             ],
           ),
           centerTitle: false,
-          // actions: [
-          //   FittedBox(
-          //     child: Padding(
-          //       padding: const EdgeInsets.all(5),
-          //       child: Icon(
-          //         returnIconAccordingToPrayer(
-          //           controller.todayPrayerTimes?.currentPrayer().name,
-          //           isSolid: true,
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ],
+          actions: [
+            // Debug-only: fire a test reminder for the current prayer now.
+            if (kDebugMode)
+              IconButton(
+                tooltip: "Test notification",
+                icon: const Icon(Icons.bug_report_outlined),
+                onPressed: () => NotificationService.showTestNotification(
+                  controller.homeController.currentPrayerName,
+                ),
+              ),
+          ],
         ),
         body: SafeArea(
           child: Column(
@@ -141,6 +143,8 @@ class PrayerTimeView extends GetView<PrayerTimeController> {
                             ),
                             child: Column(
                               children: [
+                                if (!controller.notificationsAllowed)
+                                  _enableNotificationsBanner(),
                                 prayerTimeCard(
                                   prayerName: prayerNamesList[0],
                                   prayerTime: controller.prayerTimes?.fajr ??
@@ -283,6 +287,31 @@ class PrayerTimeView extends GetView<PrayerTimeController> {
       ),
       child: Row(
         children: [
+          // Leading completion checkmark (tap to mark the prayer done).
+          if (trackerIndex != null)
+            InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {
+                PrayerTrackerService.toggle(
+                    controller.selectedDate, trackerIndex);
+                controller.update();
+                if (Get.isRegistered<HomeController>()) {
+                  Get.find<HomeController>().update();
+                }
+              },
+              child: Icon(
+                tracked
+                    ? Icons.check_circle_rounded
+                    : Icons.radio_button_unchecked_rounded,
+                color: isCurrentPrayer
+                    ? Colors.white
+                    : (tracked ? theme.primaryColor : theme.hintColor),
+                size: 22.sp,
+              ),
+            )
+          else
+            SizedBox(width: 22.sp),
+          SizedBox(width: 12.w),
           Icon(
             returnIconAccordingToPrayer(prayerName, prayerName: prayerName),
             color: isCurrentPrayer ? Colors.white : theme.primaryColor,
@@ -310,28 +339,91 @@ class PrayerTimeView extends GetView<PrayerTimeController> {
               fontWeight: isCurrentPrayer ? FontWeight.bold : FontWeight.w600,
             ),
           ),
+          // Trailing reminder bell (enable/disable notification for this prayer).
           if (trackerIndex != null) ...[
-            SizedBox(width: 10.w),
+            SizedBox(width: 8.w),
             InkWell(
-              borderRadius: BorderRadius.circular(kBorderRadius),
-              onTap: () {
-                PrayerTrackerService.toggle(
-                    controller.selectedDate, trackerIndex);
-                controller.update();
-              },
+              borderRadius: BorderRadius.circular(20),
+              onTap: () => _onBellTap(trackerIndex),
               child: Icon(
-                tracked
-                    ? Icons.check_circle_rounded
-                    : Icons.radio_button_unchecked_rounded,
+                controller.isNotifEnabled(trackerIndex)
+                    ? Icons.notifications_active_rounded
+                    : Icons.notifications_off_outlined,
                 color: isCurrentPrayer
                     ? Colors.white
-                    : (tracked ? theme.primaryColor : theme.hintColor),
-                size: 22.sp,
+                    : (controller.isNotifEnabled(trackerIndex)
+                        ? theme.primaryColor
+                        : theme.hintColor),
+                size: 20.sp,
               ),
             ),
           ],
         ],
       ),
     );
+  }
+
+  /// Banner shown when notification permission hasn't been granted yet.
+  Widget _enableNotificationsBanner() {
+    final theme = Get.theme;
+    return Container(
+      margin: const EdgeInsets.only(bottom: kSpacing),
+      padding: const EdgeInsets.symmetric(horizontal: kPadding, vertical: 12),
+      decoration: BoxDecoration(
+        color: theme.primaryColor.withValues(alpha: .1),
+        borderRadius: BorderRadius.circular(kBorderRadius),
+        border: Border.all(color: theme.primaryColor.withValues(alpha: .4)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.notifications_off_rounded, color: theme.primaryColor),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Enable notification permission first",
+                    style: Get.textTheme.titleSmall),
+                Text(
+                  "Then turn reminders on for each prayer below.",
+                  style: Get.textTheme.bodySmall
+                      ?.copyWith(color: theme.hintColor),
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: _openNotificationPermission,
+            child: const Text("Enable"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _openNotificationPermission() async {
+    await Get.to(() => const NotificationPermissionView());
+    await controller.refreshNotificationPermission();
+  }
+
+  Future<void> _onBellTap(int trackerIndex) async {
+    if (!controller.notificationsAllowed) {
+      await _openNotificationPermission();
+      if (!controller.notificationsAllowed) return;
+    }
+    final ok = await controller.togglePrayerNotification(trackerIndex);
+    if (ok) {
+      final on = controller.isNotifEnabled(trackerIndex);
+      Get.rawSnackbar(
+        message: on
+            ? "Reminder on for ${NotificationService.prayers[trackerIndex]}"
+            : "Reminder turned off",
+        backgroundColor: Get.theme.primaryColor,
+        margin: const EdgeInsets.all(kPadding),
+        borderRadius: kBorderRadius,
+        duration: const Duration(seconds: 2),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 }

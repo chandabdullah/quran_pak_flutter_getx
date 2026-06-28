@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:gap/gap.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:get/get.dart';
 import 'package:quran_pak/app/components/custom_bottomsheet.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
 import 'package:quran_pak/app/data/local/my_shared_pref.dart';
 import 'package:quran_pak/app/modules/home/controllers/home_controller.dart';
+import 'package:quran_pak/app/modules/theme_mode/views/theme_mode_view.dart';
 import 'package:quran_pak/app/routes/app_pages.dart';
 import 'package:quran_pak/config/theme/my_theme.dart';
 import 'package:quran_pak/config/translations/localization_service.dart';
@@ -75,26 +77,26 @@ class SettingsView extends GetView<SettingsController> {
                   onChanged: controller.onTimeFormatChange,
                 ),
                 _divider(),
-                _switchTile(
+                _tile(
                   icon: Icons.dark_mode_rounded,
-                  title: Strings.DarkMode.tr,
-                  subtitle: MyDarkMode.getThemeIsLight()
-                      ? Strings.Light.tr
-                      : Strings.Dark.tr,
-                  value: !MyDarkMode.getThemeIsLight(),
-                  onChanged: (value) {
-                    MyTheme.changeTheme();
+                  title: "Appearance",
+                  subtitle: _themeModeLabel(),
+                  onTap: () async {
+                    await Get.to(() => const ThemeModeView());
                     controller.update();
-                    Get.find<HomeController>().update();
+                    if (Get.isRegistered<HomeController>()) {
+                      Get.find<HomeController>().update();
+                    }
                   },
                 ),
-                _divider(),
-                _tile(
-                  icon: Icons.language_rounded,
-                  title: Strings.Language.tr,
-                  subtitle: LocalizationService.getCurrentLanguageName(),
-                  onTap: () => _showLanguageSheet(context),
-                ),
+                // Language selection is temporarily disabled.
+                // _divider(),
+                // _tile(
+                //   icon: Icons.language_rounded,
+                //   title: Strings.Language.tr,
+                //   subtitle: LocalizationService.getCurrentLanguageName(),
+                //   onTap: () => _showLanguageSheet(context),
+                // ),
               ]),
               const Gap(28),
               _footer(),
@@ -333,38 +335,53 @@ class SettingsView extends GetView<SettingsController> {
   Widget _footer() {
     return Column(
       children: [
-        Text(
-          "Next Level Software",
-          textAlign: TextAlign.center,
-          style: Get.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: Get.theme.hintColor,
+        InkWell(
+          borderRadius: BorderRadius.circular(kBorderRadius),
+          onTap: _openWebsite,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Text(
+              "Next Level Software",
+              textAlign: TextAlign.center,
+              style: Get.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: Get.theme.primaryColor,
+              ),
+            ),
           ),
         ),
-        const Gap(8),
-        Wrap(
-          spacing: 10,
-          alignment: WrapAlignment.center,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text("${Strings.Version.tr} 1.0.2",
-                style: Get.textTheme.bodySmall),
-            _dot(),
-            Text(Strings.Legal.tr, style: Get.textTheme.bodySmall),
-            _dot(),
-            Text(Strings.Website.tr, style: Get.textTheme.bodySmall),
-          ],
+        const Gap(4),
+        Text(
+          "${Strings.Version.tr} 1.0.2",
+          style: Get.textTheme.bodySmall,
         ),
       ],
     );
   }
 
-  Widget _dot() => Icon(Icons.circle, size: 4, color: Get.theme.disabledColor);
+  String _themeModeLabel() {
+    switch (MyTheme.currentThemeMode) {
+      case AppTheme.Light:
+        return "Light";
+      case AppTheme.Dark:
+        return "Dark";
+      case AppTheme.System:
+        return "System default";
+    }
+  }
+
+  Future<void> _openWebsite() async {
+    final uri = Uri.parse("https://thenextlevelsoftware.com");
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
 
   // ---------------------------------------------------------------------------
-  // Language picker
+  // Language picker (kept for when language selection is re-enabled)
   // ---------------------------------------------------------------------------
 
+  // ignore: unused_element
   void _showLanguageSheet(BuildContext context) {
     showCustomBottomSheet(
       context,

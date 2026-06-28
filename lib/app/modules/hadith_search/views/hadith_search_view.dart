@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
 import 'package:quran_pak/app/components/hadith_card.dart';
+import 'package:quran_pak/app/components/hadith_detail_page.dart';
 import 'package:quran_pak/app/constants/app_constants.dart';
 import 'package:quran_pak/app/services/api_call_status.dart';
+import 'package:quran_pak/app/services/hadith_service.dart';
 
 import '../controllers/hadith_search_controller.dart';
 
@@ -16,16 +19,27 @@ class HadithSearchView extends GetView<HadithSearchController> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
-        title: TextField(
-          controller: controller.searchController,
-          autofocus: true,
-          textInputAction: TextInputAction.search,
-          onChanged: controller.onSearch,
-          style: Get.textTheme.bodyLarge,
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-            hintText: "Search all Hadith…",
-          ),
+        title: GetBuilder<HadithSearchController>(
+          builder: (_) {
+            final byNumber = controller.searchMode == HadithSearchMode.number;
+            return TextField(
+              controller: controller.searchController,
+              autofocus: true,
+              keyboardType:
+                  byNumber ? TextInputType.number : TextInputType.text,
+              inputFormatters:
+                  byNumber ? [FilteringTextInputFormatter.digitsOnly] : null,
+              textInputAction: TextInputAction.search,
+              onChanged: controller.onSearch,
+              style: Get.textTheme.bodyLarge,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: byNumber
+                    ? "Enter hadith number…"
+                    : "Search all Hadith…",
+              ),
+            );
+          },
         ),
         actions: [
           GetBuilder<HadithSearchController>(
@@ -38,7 +52,49 @@ class HadithSearchView extends GetView<HadithSearchController> {
           ),
         ],
       ),
-      body: GetBuilder<HadithSearchController>(builder: (_) => _body()),
+      body: GetBuilder<HadithSearchController>(
+        builder: (_) => Column(
+          children: [
+            _modeToggle(),
+            Expanded(child: _body()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _modeToggle() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(kPadding, 8, kPadding, 4),
+      child: Row(
+        children: [
+          _modeChip("Topic / Word", HadithSearchMode.topic),
+          const Gap(8),
+          _modeChip("Number", HadithSearchMode.number),
+        ],
+      ),
+    );
+  }
+
+  Widget _modeChip(String label, HadithSearchMode mode) {
+    final selected = controller.searchMode == mode;
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      showCheckmark: false,
+      labelStyle: TextStyle(
+        color: selected ? Colors.white : Get.theme.hintColor,
+        fontWeight: FontWeight.w600,
+      ),
+      backgroundColor: Get.theme.cardColor,
+      selectedColor: Get.theme.primaryColor,
+      side: BorderSide(
+        color: selected ? Get.theme.primaryColor : Get.theme.splashColor,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(kBorderRadius),
+      ),
+      onSelected: (_) => controller.setMode(mode),
     );
   }
 
@@ -83,10 +139,17 @@ class HadithSearchView extends GetView<HadithSearchController> {
                 itemCount: controller.results.length,
                 itemBuilder: (context, index) {
                   final r = controller.results[index];
-                  return HadithCard(
-                    hadith: r.hadith,
-                    collectionName: r.bookName,
-                    sectionName: r.sectionEn,
+                  return GestureDetector(
+                    onTap: () => Get.to(() => HadithDetailPage(
+                          hadith: r.hadith,
+                          collectionName: r.bookName,
+                          sectionName: r.sectionEn,
+                        )),
+                    child: HadithCard(
+                      hadith: r.hadith,
+                      collectionName: r.bookName,
+                      sectionName: r.sectionEn,
+                    ),
                   );
                 },
               ),

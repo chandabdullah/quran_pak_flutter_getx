@@ -14,97 +14,35 @@ class BookmarksView extends GetView<BookmarksController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Bookmarks"),
+        title: const Text("Favourites"),
         centerTitle: true,
       ),
       body: GetBuilder<BookmarksController>(builder: (_) {
-        final lastRead = MyBookmark.getLastRead();
         return ListView(
           padding: const EdgeInsets.all(kPadding),
           children: [
-            if (lastRead != null) ...[
-              Text(
-                "CONTINUE READING",
-                style: Get.textTheme.bodySmall?.copyWith(
-                  color: Get.theme.primaryColor,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.1,
-                ),
-              ),
-              const Gap(8),
-              _lastReadCard(lastRead),
-              const Gap(24),
-            ],
-            Text(
-              "SAVED VERSES",
-              style: Get.textTheme.bodySmall?.copyWith(
-                color: Get.theme.primaryColor,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.1,
-              ),
-            ),
+            _label("SAVED VERSES"),
             const Gap(8),
-            if (controller.bookmarks.isEmpty)
+            if (controller.savedVerses.isEmpty)
               _empty()
             else
-              ...controller.bookmarks.map(_bookmarkTile),
+              ...controller.savedVerses.map(_savedTile),
           ],
         );
       }),
     );
   }
 
-  Widget _lastReadCard(QuranBookmark lastRead) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(kBorderRadius),
-        onTap: () => controller.openBookmark(lastRead),
-        child: Container(
-          padding: const EdgeInsets.all(kPadding),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(kBorderRadius),
-            gradient: LinearGradient(
-              colors: [
-                Get.theme.primaryColor,
-                Color.lerp(Get.theme.primaryColor, Colors.black, .25) ??
-                    Get.theme.primaryColor,
-              ],
-            ),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.menu_book_rounded, color: Colors.white, size: 30),
-              const Gap(kSpacing),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      lastRead.surahName,
-                      style: Get.textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "Verse ${lastRead.verse}",
-                      style: Get.textTheme.bodySmall?.copyWith(
-                        color: Colors.white.withValues(alpha: .85),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.arrow_forward_rounded, color: Colors.white),
-            ],
-          ),
+  Widget _label(String text) => Text(
+        text,
+        style: Get.textTheme.bodySmall?.copyWith(
+          color: Get.theme.primaryColor,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.1,
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _bookmarkTile(QuranBookmark b) {
+  Widget _savedTile(QuranBookmark b) {
     return Container(
       margin: const EdgeInsets.only(bottom: kSpacing),
       decoration: BoxDecoration(
@@ -116,10 +54,10 @@ class BookmarksView extends GetView<BookmarksController> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(kBorderRadius),
         ),
-        onTap: () => controller.openBookmark(b),
+        onTap: () => controller.open(b.surah, b.verse),
         leading: CircleAvatar(
           backgroundColor: Get.theme.primaryColor.withValues(alpha: .12),
-          child: Icon(Icons.bookmark_rounded, color: Get.theme.primaryColor),
+          child: Icon(Icons.favorite_rounded, color: Get.theme.primaryColor),
         ),
         title: Text(b.surahName, style: Get.textTheme.titleSmall),
         subtitle: Text(
@@ -139,13 +77,13 @@ class BookmarksView extends GetView<BookmarksController> {
       padding: const EdgeInsets.symmetric(vertical: 48),
       child: Column(
         children: [
-          Icon(Icons.bookmark_border_rounded,
+          Icon(Icons.favorite_border_rounded,
               size: 56, color: Get.theme.hintColor),
           const Gap(12),
-          Text("No bookmarks yet", style: Get.textTheme.titleSmall),
+          Text("No saved verses yet", style: Get.textTheme.titleSmall),
           const Gap(4),
           Text(
-            "Tap the bookmark icon on any verse to save it here.",
+            "Tap the heart on any verse to save it here.",
             textAlign: TextAlign.center,
             style: Get.textTheme.bodySmall?.copyWith(color: Get.theme.hintColor),
           ),

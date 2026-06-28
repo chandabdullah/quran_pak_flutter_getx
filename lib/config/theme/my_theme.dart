@@ -112,6 +112,20 @@ class MyTheme {
     Get.changeThemeMode(!isLightTheme ? ThemeMode.light : ThemeMode.dark);
   }
 
+  /// Applies an explicit theme mode (System / Light / Dark) and rebuilds.
+  static void applyTheme(AppTheme mode) {
+    MyDarkMode.setThemeIsLight(mode);
+    final themeMode = switch (mode) {
+      AppTheme.Light => ThemeMode.light,
+      AppTheme.Dark => ThemeMode.dark,
+      AppTheme.System => ThemeMode.system,
+    };
+    Get.changeThemeMode(themeMode);
+    Get.forceAppUpdate();
+  }
+
+  static AppTheme get currentThemeMode => MyDarkMode.getCurrentTheme();
+
   /// check if the theme is light or dark
   static bool get getThemeIsLight => MyDarkMode.getThemeIsLight();
 }

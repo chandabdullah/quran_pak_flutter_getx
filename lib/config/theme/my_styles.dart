@@ -18,18 +18,28 @@ class MyStyles {
             : DarkThemeColors.iconColor,
       );
 
-  /// input theme
-  static InputDecorationTheme getInputTheme({required bool isLightTheme}) =>
-      InputDecorationTheme(
-        filled: true,
-        fillColor: Get.theme.cardColor.withOpacity(.3),
-        hintStyle: Get.textTheme.bodyMedium,
-        border: OutlineInputBorder(
+  /// input theme — consistent rounded, outlined inputs across the whole app
+  /// (matching the Hadith search fields).
+  static InputDecorationTheme getInputTheme({required bool isLightTheme}) {
+    final Color primary = isLightTheme
+        ? LightThemeColors.primaryColor.call()
+        : DarkThemeColors.primaryColor.call();
+    final Color borderColor = Get.theme.dividerColor;
+    OutlineInputBorder outline(Color c, [double w = 1]) => OutlineInputBorder(
           borderRadius: BorderRadius.circular(kBorderRadius),
-          borderSide: BorderSide.none,
-        ),
+          borderSide: BorderSide(color: c, width: w),
+        );
+    return InputDecorationTheme(
+        filled: true,
+        isDense: true,
+        fillColor: Get.theme.cardColor,
+        hintStyle: Get.textTheme.bodyMedium,
+        border: outline(borderColor),
+        enabledBorder: outline(borderColor),
+        focusedBorder: outline(primary, 1.5),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: kSpacing,
+          vertical: kSpacing,
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         labelStyle: Get.textTheme.bodyMedium?.copyWith(
@@ -74,6 +84,7 @@ class MyStyles {
             ? LightThemeColors.primaryColor.call()
             : DarkThemeColors.primaryColor.call(),
       );
+  }
 
   ///app bar theme
   static AppBarTheme getAppBarTheme({required bool isLightTheme}) =>

@@ -87,9 +87,9 @@ class QuranView extends GetView<QuranController> {
                 onPressed: controller.onSearchClick,
               ),
               IconButton(
-                tooltip: "Bookmarks",
+                tooltip: "Favourites & bookmark",
                 onPressed: () => Get.toNamed(Routes.BOOKMARKS),
-                icon: const Icon(Icons.bookmark_border_rounded),
+                icon: const Icon(Icons.favorite_border_rounded),
               ),
               // IconButton(
               //   onPressed: controller.onSearchClick,

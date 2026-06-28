@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
+/// How a hadith search query should be interpreted.
+enum HadithSearchMode { number, topic }
+
 /// ===========================================================================
 /// Models
 /// ===========================================================================
@@ -80,6 +83,15 @@ class HadithItem {
         english: json['en'] ?? '',
         grades: (json['g'] as List?)?.map((e) => e.toString()).toList() ?? [],
       );
+
+  /// Short single-line preview (the opening words) for list rows.
+  String get preview {
+    final source = english.isNotEmpty
+        ? english
+        : (urdu.isNotEmpty ? urdu : arabic);
+    final clean = source.replaceAll('\n', ' ').trim();
+    return clean.length > 120 ? '${clean.substring(0, 120)}…' : clean;
+  }
 }
 
 /// A fully loaded collection (sections + every hadith), used for browsing.
@@ -173,39 +185,47 @@ class HadithService {
   /// Arabic / Urdu / English text.
   static List<HadithItem> searchInCollection(
     HadithCollection collection,
-    String query,
-  ) {
+    String query, {
+    HadithSearchMode mode = HadithSearchMode.topic,
+  }) {
     final q = query.trim().toLowerCase();
     if (q.isEmpty) return collection.hadiths;
-    final qNum = int.tryParse(q);
 
+    if (mode == HadithSearchMode.number) {
+      final qNum = int.tryParse(q);
+      if (qNum == null) return const [];
+      return collection.hadiths.where((h) => h.number == qNum).toList();
+    }
+
+    // Topic / word search across text and section names.
     return collection.hadiths.where((h) {
-      if (qNum != null && h.number == qNum) return true;
-      if (h.arabic.toLowerCase().contains(q)) return true;
-      if (h.urdu.toLowerCase().contains(q)) return true;
       if (h.english.toLowerCase().contains(q)) return true;
+      if (h.urdu.toLowerCase().contains(q)) return true;
+      if (h.arabic.toLowerCase().contains(q)) return true;
       final section = collection.sections[h.sectionNumber];
-      if (section != null &&
+      return section != null &&
           (section.en.toLowerCase().contains(q) ||
               section.ur.toLowerCase().contains(q) ||
-              section.ar.toLowerCase().contains(q))) {
-        return true;
-      }
-      return false;
+              section.ar.toLowerCase().contains(q));
     }).toList();
   }
 
-  /// Searches across all six collections. Each book is decoded and filtered
-  /// inside a background isolate so only the matching rows cross back to the
-  /// UI thread (keeps memory and jank low). [limit] caps total results.
+  /// Searches across all six collections (or a single [bookId]). Each book is
+  /// decoded and filtered inside a background isolate so only the matching rows
+  /// cross back to the UI thread. [limit] caps total results.
   static Future<List<HadithSearchResult>> searchAll(
     String query, {
+    HadithSearchMode mode = HadithSearchMode.topic,
+    String? bookId,
     int limit = 200,
   }) async {
     final q = query.trim();
     if (q.isEmpty) return [];
+    if (mode == HadithSearchMode.number && int.tryParse(q) == null) return [];
 
-    final books = await getBooks();
+    final allBooks = await getBooks();
+    final books =
+        bookId == null ? allBooks : allBooks.where((b) => b.book == bookId);
     final results = <HadithSearchResult>[];
 
     for (final book in books) {
@@ -214,6 +234,7 @@ class HadithService {
       final matches = await compute(_searchRaw, {
         'raw': raw,
         'query': q,
+        'mode': mode.name,
         'limit': limit - results.length,
       });
       for (final m in matches) {
@@ -268,6 +289,7 @@ HadithCollection _parseCollection(String raw) {
 List<Map<String, dynamic>> _searchRaw(Map<String, dynamic> args) {
   final data = jsonDecode(args['raw'] as String) as Map<String, dynamic>;
   final q = (args['query'] as String).trim().toLowerCase();
+  final numberMode = (args['mode'] as String?) == 'number';
   final qNum = int.tryParse(q);
   final limit = args['limit'] as int;
   final sections = data['sections'] as Map<String, dynamic>;
@@ -277,8 +299,10 @@ List<Map<String, dynamic>> _searchRaw(Map<String, dynamic> args) {
     final hadith = h as Map<String, dynamic>;
     final section = sections['${hadith['b']}'] as Map<String, dynamic>?;
 
-    bool matched = qNum != null && hadith['n'] == qNum;
-    if (!matched) {
+    bool matched;
+    if (numberMode) {
+      matched = qNum != null && hadith['n'] == qNum;
+    } else {
       final ar = (hadith['ar'] ?? '').toString().toLowerCase();
       final ur = (hadith['ur'] ?? '').toString().toLowerCase();
       final en = (hadith['en'] ?? '').toString().toLowerCase();

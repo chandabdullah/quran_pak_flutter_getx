@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:quran_pak/app/modules/home/controllers/home_controller.dart';
 import 'package:quran_pak/app/services/api_call_status.dart';
+import 'package:quran_pak/app/services/notification_service.dart';
 import 'package:quran_pak/app/services/prayer_time_service.dart';
 import 'package:quran_pak/utils/date_time_utils.dart';
 
@@ -11,6 +12,29 @@ class PrayerTimeController extends GetxController {
   var homeController = Get.find<HomeController>();
 
   ApiCallStatus apiCallStatus = ApiCallStatus.holding;
+
+  /// Whether the OS notification permission is granted.
+  bool notificationsAllowed = false;
+
+  Future<void> refreshNotificationPermission() async {
+    notificationsAllowed = await NotificationService.areEnabled();
+    update();
+  }
+
+  bool isNotifEnabled(int index) => NotificationService.isPrayerEnabled(index);
+
+  /// Toggles the reminder for a prayer. Returns false if permission is missing.
+  /// Scheduling uses each upcoming day's real computed prayer time.
+  Future<bool> togglePrayerNotification(int index) async {
+    if (!notificationsAllowed) {
+      await refreshNotificationPermission();
+      if (!notificationsAllowed) return false;
+    }
+    final enabled = !NotificationService.isPrayerEnabled(index);
+    await NotificationService.setPrayerEnabled(index, enabled: enabled);
+    update();
+    return true;
+  }
 
   final calendarControllerToday = AdvancedCalendarController.today();
 
@@ -76,6 +100,7 @@ class PrayerTimeController extends GetxController {
     todayPrayerTimes = homeController.prayerTimes;
     update();
     getPrayerTime();
+    refreshNotificationPermission();
     super.onInit();
   }
 

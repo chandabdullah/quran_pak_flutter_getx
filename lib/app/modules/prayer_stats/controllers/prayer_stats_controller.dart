@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:quran_pak/app/modules/home/controllers/home_controller.dart';
 import 'package:quran_pak/app/services/prayer_tracker_service.dart';
 
 class PrayerStatsController extends GetxController {
@@ -28,5 +29,9 @@ class PrayerStatsController extends GetxController {
   void toggleToday(int index) {
     PrayerTrackerService.toggle(today, index);
     update();
+    // Keep the home screen's tracker in sync.
+    if (Get.isRegistered<HomeController>()) {
+      Get.find<HomeController>().update();
+    }
   }
 }

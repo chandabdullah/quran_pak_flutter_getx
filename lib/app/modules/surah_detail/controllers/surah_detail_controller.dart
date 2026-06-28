@@ -40,8 +40,7 @@ class SurahDetailController extends GetxController {
     isLoading = false;
     update();
 
-    // Save where the reader is starting, and animate to the target verse.
-    _saveLastRead(initialVerse ?? 1);
+    // Animate to the target verse (auto-detect saves position while scrolling).
     if (initialVerse != null && initialVerse > 1) {
       // Wait for the list to lay out before scrolling.
       await .35.delay();
@@ -61,23 +60,19 @@ class SurahDetailController extends GetxController {
     );
   }
 
-  /// Persist the top-most visible verse as "last read" while scrolling.
+  /// Auto-detect: continuously save the top-most visible verse as the continue
+  /// position while scrolling. [MyBookmark.setAutoContinue] is a no-op when the
+  /// user has set a manual mark, so manual pins are never overwritten.
   void _onScroll() {
     final positions = itemPositionsListener.itemPositions.value;
     if (positions.isEmpty || surah == null) return;
     final first = positions
         .where((p) => p.itemTrailingEdge > 0)
         .reduce((a, b) => a.itemLeadingEdge < b.itemLeadingEdge ? a : b);
-    _saveLastRead(first.index + 1);
-  }
-
-  void _saveLastRead(int verse) {
-    if (surah == null) return;
-    MyBookmark.setLastRead(
+    MyBookmark.setAutoContinue(
       surah: surahNumber,
-      verse: verse,
+      verse: first.index + 1,
       surahName: surah!.nameEnglish,
-      savedAt: DateTime.now().millisecondsSinceEpoch,
     );
   }
 

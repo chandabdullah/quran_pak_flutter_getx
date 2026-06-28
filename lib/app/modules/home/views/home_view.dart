@@ -31,11 +31,13 @@ class HomeView extends GetView<HomeController> {
         centerTitle: false,
         curvedBodyRadius: kBorderRadius,
         headerExpandedHeight: 0.3,
-        alwaysShowLeadingAndAction: true,
+        // Show the app-bar actions only once the header has collapsed; while
+        // expanded, the hero shows its own bookmark/settings icons.
+        alwaysShowLeadingAndAction: false,
         actions: [
           IconButton(
             onPressed: () => Get.toNamed(Routes.BOOKMARKS),
-            icon: const Icon(Icons.bookmarks_outlined),
+            icon: const Icon(Icons.favorite_border_rounded),
           ),
           IconButton(
             onPressed: () => Get.toNamed(Routes.SETTINGS),
@@ -67,9 +69,10 @@ class HomeView extends GetView<HomeController> {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
           colors: [
+            Color.lerp(primary, Colors.white, .12) ?? primary,
             primary,
             Color.lerp(primary, Colors.black, .35) ?? primary,
           ],
@@ -78,13 +81,15 @@ class HomeView extends GetView<HomeController> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // Mosque image kept subtle so the text stays readable.
-          Positioned.fill(
+          // Mosque silhouette centered behind the clock.
+          Align(
+            alignment: Alignment.bottomCenter,
             child: Opacity(
-              opacity: .14,
+              opacity: .22,
               child: Image.asset(
                 "assets/images/mosque.png",
-                fit: BoxFit.cover,
+                fit: BoxFit.fitWidth,
+                width: double.infinity,
                 alignment: Alignment.bottomCenter,
               ),
             ),
@@ -92,13 +97,11 @@ class HomeView extends GetView<HomeController> {
           Padding(
             padding: EdgeInsets.fromLTRB(
               kPadding + 4,
-              kTopPadding(context) + kPadding,
+              kTopPadding(context) + 8,
               kPadding + 4,
               kPadding,
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
@@ -130,15 +133,17 @@ class HomeView extends GetView<HomeController> {
                         ],
                       ),
                     ),
-                    _circleIcon(Icons.bookmarks_outlined,
+                    _circleIcon(Icons.favorite_border_rounded,
                         () => Get.toNamed(Routes.BOOKMARKS)),
                     const Gap(8),
                     _circleIcon(Icons.settings_outlined,
                         () => Get.toNamed(Routes.SETTINGS)),
                   ],
                 ),
-                const _LiveClock(),
-                _currentNextPrayer(),
+                const Spacer(),
+                _timeAndDate(),
+                const Gap(kPadding),
+                _prayerFocus(),
               ],
             ),
           ),
@@ -147,60 +152,66 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  /// Current prayer (with its time) and the upcoming prayer (with countdown).
-  Widget _currentNextPrayer() {
-    if (controller.prayerTimes == null) {
-      return const SizedBox(height: 1);
-    }
-    return Container(
-      padding: const EdgeInsets.all(kSpacing),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .12),
-        borderRadius: BorderRadius.circular(kBorderRadius),
-        border: Border.all(color: Colors.white24),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _prayerInfo(
-              "Current",
-              controller.currentPrayerName,
-              controller.currentPrayerTime().toLocalDateFormat(),
+  /// Compact current time + Gregorian date on the left, Islamic (Hijri) date
+  /// on the right.
+  Widget _timeAndDate() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        const Expanded(child: _ClockLine()),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.calendar_today_rounded,
+                    color: Colors.white70, size: 12),
+                const Gap(4),
+                Text(
+                  "Islamic Date",
+                  style: Get.textTheme.bodySmall?.copyWith(
+                      color: Colors.white70, letterSpacing: .5, fontSize: 10),
+                ),
+              ],
             ),
-          ),
-          Container(width: 1, height: 34, color: Colors.white24),
-          Expanded(
-            child: _prayerInfo(
-              "Next",
-              controller.upcomingPrayerName,
-              timeLeft(
-                DateTime.now(),
-                controller.nextPrayerTime() ?? DateTime.now(),
-              ),
-              alignEnd: true,
+            const Gap(2),
+            Text(
+              controller.islamicDate().toFormat('dd MMMM yyyy'),
+              style: Get.textTheme.titleSmall
+                  ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 
-  Widget _prayerInfo(String label, String name, String value,
-      {bool alignEnd = false}) {
-    return Column(
-      crossAxisAlignment:
-          alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-      children: [
-        Text(label,
-            style: Get.textTheme.bodySmall?.copyWith(color: Colors.white70)),
-        Text(
-          name,
-          style: Get.textTheme.titleMedium
-              ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+  /// The focal point of the hero: current prayer + next prayer with a live
+  /// countdown and a progress bar between them.
+  Widget _prayerFocus() {
+    if (controller.prayerTimes == null) {
+      return Container(
+        height: 92,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: .12),
+          borderRadius: BorderRadius.circular(kBorderRadius),
         ),
-        Text(value,
-            style: Get.textTheme.bodySmall?.copyWith(color: Colors.white)),
-      ],
+        child: const SizedBox(
+          height: 22,
+          width: 22,
+          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+        ),
+      );
+    }
+    return _PrayerFocus(
+      currentName: controller.currentPrayerName,
+      currentTime: controller.currentPrayerTime(),
+      nextName: controller.upcomingPrayerName,
+      nextTime: controller.nextPrayerTime(),
+      // When the countdown hits zero, rebuild so the next prayer becomes
+      // current and its countdown starts immediately.
+      onElapsed: controller.update,
     );
   }
 
@@ -301,8 +312,8 @@ class HomeView extends GetView<HomeController> {
         'route': Routes.QURAN
       },
       {
-        'icon': FlutterIslamicIcons.calendar,
-        'label': 'Calendar',
+        'icon': FlutterIslamicIcons.solidKowtow,
+        'label': 'Prayer',
         'route': Routes.PRAYER_TIME
       },
       {
@@ -323,12 +334,12 @@ class HomeView extends GetView<HomeController> {
       {
         'icon': FlutterIslamicIcons.solidMuslim2,
         'label': 'Hadith',
-        'route': Routes.HADITH
+        'route': null
       },
       {
-        'icon': FlutterIslamicIcons.solidKowtow,
-        'label': 'Prayer',
-        'route': Routes.PRAYER_TIME
+        'icon': FlutterIslamicIcons.solidPrayingPerson,
+        'label': 'Dua',
+        'route': Routes.DUA
       },
       {
         'icon': FlutterIslamicIcons.solidMosque,
@@ -605,16 +616,16 @@ class PrayerNames {
   }
 }
 
-/// A lightweight clock that updates itself every second.
-class _LiveClock extends StatefulWidget {
-  const _LiveClock();
+/// Compact live time + Gregorian date (left side of the hero info row).
+class _ClockLine extends StatefulWidget {
+  const _ClockLine();
 
   @override
-  State<_LiveClock> createState() => _LiveClockState();
+  State<_ClockLine> createState() => _ClockLineState();
 }
 
-class _LiveClockState extends State<_LiveClock> {
-  late Timer _timer;
+class _ClockLineState extends State<_ClockLine> {
+  late final Timer _timer;
   late DateTime _now;
 
   @override
@@ -634,32 +645,174 @@ class _LiveClockState extends State<_LiveClock> {
 
   @override
   Widget build(BuildContext context) {
-    final timeText = DateFormat('hh:mm').format(_now);
-    final suffix = DateFormat('a').format(_now);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          timeText,
-          style: Get.textTheme.displaySmall?.copyWith(
+          DateFormat('hh:mm a').format(_now),
+          style: Get.textTheme.headlineSmall?.copyWith(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const Gap(6),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 6),
-          child: Text(suffix,
-              style: Get.textTheme.titleSmall?.copyWith(color: Colors.white70)),
+        Text(
+          DateFormat('EEEE, dd MMMM yyyy').format(_now),
+          style: Get.textTheme.bodySmall?.copyWith(color: Colors.white70),
         ),
-        const Spacer(),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 4),
-          child: Text(
-            DateFormat('EEE, dd MMM').format(_now),
-            style: Get.textTheme.bodySmall?.copyWith(color: Colors.white70),
+      ],
+    );
+  }
+}
+
+/// Engaging prayer focus card: current prayer + next prayer with a live
+/// countdown and a progress bar showing how far through the interval we are.
+class _PrayerFocus extends StatefulWidget {
+  const _PrayerFocus({
+    required this.currentName,
+    required this.currentTime,
+    required this.nextName,
+    required this.nextTime,
+    required this.onElapsed,
+  });
+
+  final String currentName;
+  final DateTime? currentTime;
+  final String nextName;
+  final DateTime? nextTime;
+  final VoidCallback onElapsed;
+
+  @override
+  State<_PrayerFocus> createState() => _PrayerFocusState();
+}
+
+class _PrayerFocusState extends State<_PrayerFocus> {
+  late final Timer _timer;
+  DateTime? _firedFor;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      final next = widget.nextTime;
+      // Fire once when the next prayer time is reached so the parent rebuilds
+      // and the following prayer's countdown begins.
+      if (next != null &&
+          !DateTime.now().isBefore(next) &&
+          _firedFor != next) {
+        _firedFor = next;
+        widget.onElapsed();
+      }
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  String _format(Duration d) {
+    if (d.isNegative) d = Duration.zero;
+    final h = d.inHours;
+    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return h > 0 ? '$h:$m:$s' : '$m:$s';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final next = widget.nextTime;
+    final current = widget.currentTime;
+
+    final remaining = next == null ? null : next.difference(now);
+    double progress = 0;
+    if (current != null && next != null) {
+      final total = next.difference(current).inSeconds;
+      final done = now.difference(current).inSeconds;
+      if (total > 0) progress = (done / total).clamp(0.0, 1.0);
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(kSpacing),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: .14),
+        borderRadius: BorderRadius.circular(kBorderRadius),
+        border: Border.all(color: Colors.white24),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _prayerCol(
+                  "NOW",
+                  widget.currentName,
+                  widget.currentTime.toLocalDateFormat(),
+                  alignEnd: false,
+                ),
+              ),
+              Container(width: 1, height: 36, color: Colors.white24),
+              Expanded(
+                child: _prayerCol(
+                  "NEXT",
+                  widget.nextName,
+                  widget.nextTime.toLocalDateFormat(),
+                  alignEnd: true,
+                ),
+              ),
+            ],
           ),
+          const Gap(10),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(kBorderRadius),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 5,
+              backgroundColor: Colors.white24,
+              valueColor: const AlwaysStoppedAnimation(Colors.white),
+            ),
+          ),
+          const Gap(8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.hourglass_bottom_rounded,
+                  color: Colors.white, size: 14),
+              const Gap(6),
+              Text(
+                remaining == null
+                    ? "—"
+                    : "${_format(remaining)} until ${widget.nextName}",
+                style: Get.textTheme.bodySmall?.copyWith(
+                    color: Colors.white, fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _prayerCol(String label, String name, String time,
+      {required bool alignEnd}) {
+    final align = alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start;
+    return Column(
+      crossAxisAlignment: align,
+      children: [
+        Text(label,
+            style: Get.textTheme.bodySmall?.copyWith(
+                color: Colors.white70, fontSize: 10, letterSpacing: .5)),
+        const Gap(2),
+        Text(
+          name,
+          style: Get.textTheme.titleMedium
+              ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        Text(time,
+            style: Get.textTheme.bodySmall?.copyWith(color: Colors.white)),
       ],
     );
   }

@@ -9,12 +9,20 @@ class HadithSearchController extends GetxController {
   final TextEditingController searchController = TextEditingController();
 
   String query = "";
+  HadithSearchMode searchMode = HadithSearchMode.topic;
   // `holding` = idle/no query yet.
   ApiCallStatus status = ApiCallStatus.holding;
   List<HadithSearchResult> results = [];
 
   Timer? _debounce;
   int _searchToken = 0;
+
+  void setMode(HadithSearchMode mode) {
+    if (searchMode == mode) return;
+    searchMode = mode;
+    update();
+    if (query.trim().isNotEmpty) onSearch(query);
+  }
 
   /// Global search across all six collections: by hadith number, book/section
   /// name, or any word/topic in the Arabic, Urdu or English text.
@@ -34,7 +42,7 @@ class HadithSearchController extends GetxController {
       status = ApiCallStatus.loading;
       update();
 
-      final found = await HadithService.searchAll(value);
+      final found = await HadithService.searchAll(value, mode: searchMode);
       // Drop stale results if a newer search has started.
       if (token != _searchToken) return;
 
