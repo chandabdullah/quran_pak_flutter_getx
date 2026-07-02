@@ -15,20 +15,31 @@ import 'package:get/get.dart';
 
 import 'app/routes/app_pages.dart';
 
+/// Runs a start-up init but never lets a failure abort `main()` (which would
+/// leave the app stuck on the native splash with no UI ever mounted).
+Future<void> _safeInit(String name, Future<void> Function() init) async {
+  try {
+    await init();
+  } catch (e, s) {
+    debugPrint('Startup init "$name" failed: $e\n$s');
+  }
+}
+
 void main() async {
   // wait for bindings
   WidgetsFlutterBinding.ensureInitialized();
 
-  // init shared preference
-  await MySharedPref.init();
+  // init shared preference (required before anything reads storage)
+  await _safeInit('shared_pref', () => MySharedPref.init());
 
   // init Hive (prayer tracker)
-  await PrayerTrackerService.init();
+  await _safeInit('hive', () => PrayerTrackerService.init());
 
   // init local notifications (prayer reminders)
-  await NotificationService.init();
+  await _safeInit('notifications', () => NotificationService.init());
 
-  await Quran.initialize();
+  // init Quran data
+  await _safeInit('quran', () => Quran.initialize());
 
   // Show the permission onboarding only on first launch; afterwards go home.
   final String initialRoute =

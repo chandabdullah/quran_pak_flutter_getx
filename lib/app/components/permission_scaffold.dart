@@ -69,27 +69,28 @@ class _PermissionScaffoldState extends State<PermissionScaffold>
             children: [
               if (widget.step != null) _stepDots(primary),
               const Spacer(),
-              // Pulsing icon badge.
-              AnimatedBuilder(
-                animation: _pulse,
-                builder: (context, _) {
-                  final t = Curves.easeInOut.transform(_pulse.value);
-                  return Container(
-                    padding: const EdgeInsets.all(36),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: primary.withValues(alpha: .10 + .06 * t),
-                      boxShadow: [
-                        BoxShadow(
-                          color: primary.withValues(alpha: .15 + .15 * t),
-                          blurRadius: 24 + 20 * t,
-                          spreadRadius: 2 * t,
-                        ),
-                      ],
-                    ),
-                    child: Icon(widget.icon, size: 64, color: primary),
-                  );
-                },
+              // Gently pulsing icon badge. Only a cheap scale animates each
+              // frame; the shadow/background are static so it stays smooth even
+              // on low-end devices.
+              ScaleTransition(
+                scale: Tween(begin: 0.97, end: 1.05).animate(
+                  CurvedAnimation(parent: _pulse, curve: Curves.easeInOut),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(36),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: primary.withValues(alpha: .12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: primary.withValues(alpha: .18),
+                        blurRadius: 20,
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                  child: Icon(widget.icon, size: 64, color: primary),
+                ),
               ),
               const Gap(28),
               Text(

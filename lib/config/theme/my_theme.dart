@@ -8,9 +8,23 @@ import '/config/theme/my_styles.dart';
 import 'package:flutter/material.dart';
 
 class MyTheme {
+  // Cache the built themes (keyed by light/dark) so the app-level builder
+  // doesn't reconstruct the whole ThemeData — and re-run GoogleFonts — on every
+  // rebuild. Cleared when the user switches theme.
+  static final Map<bool, ThemeData> _cache = {};
+
+  static void clearCache() => _cache.clear();
+
   static ThemeData getThemeData() {
     bool isLight = MyDarkMode.getThemeIsLight();
+    final cached = _cache[isLight];
+    if (cached != null) return cached;
+    final theme = _build(isLight);
+    _cache[isLight] = theme;
+    return theme;
+  }
 
+  static ThemeData _build(bool isLight) {
     return ThemeData(
       // fontFamily: arabicFont,
       fontFamily: GoogleFonts.poppins().fontFamily,
@@ -108,6 +122,7 @@ class MyTheme {
     bool isLightTheme = MyDarkMode.getThemeIsLight();
     // *) store the new theme mode on get storage
     MyDarkMode.setThemeIsLight(!isLightTheme ? AppTheme.Light : AppTheme.Dark);
+    clearCache();
     // *) let GetX change theme
     Get.changeThemeMode(!isLightTheme ? ThemeMode.light : ThemeMode.dark);
   }
@@ -115,6 +130,7 @@ class MyTheme {
   /// Applies an explicit theme mode (System / Light / Dark) and rebuilds.
   static void applyTheme(AppTheme mode) {
     MyDarkMode.setThemeIsLight(mode);
+    clearCache();
     final themeMode = switch (mode) {
       AppTheme.Light => ThemeMode.light,
       AppTheme.Dark => ThemeMode.dark,

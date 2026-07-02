@@ -1,5 +1,5 @@
 name: quran_pak
-version: 1.1.0+3
+version: 1.1.0+4
 publish_to: none
 description: A new Flutter project.
 environment: 
@@ -61,11 +61,15 @@ flutter:
     - assets/images/
     - assets/hadith/
 
-flutter_launcher_icons: 
+flutter_launcher_icons:
   android: launcher_icon
-  image_path: assets/logo.png
+  image_path: "assets/icon.png"
   ios: true
   min_sdk_android: 21
+  remove_alpha_ios: true
+  # Adaptive icon: teal fills the whole tile, white mosque glyph on top.
+  adaptive_icon_background: "#13a795"
+  adaptive_icon_foreground: "assets/icon_foreground.png"
 
 flutter_native_splash: 
   color: "#13a795"
